@@ -1,4 +1,4 @@
-import * as React from 'react';
+
 import { styled } from '@mui/material/styles';
 import Divider, { dividerClasses } from '@mui/material/Divider';
 import Menu from '@mui/material/Menu';
@@ -10,12 +10,16 @@ import ListItemIcon, { listItemIconClasses } from '@mui/material/ListItemIcon';
 import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
 import MoreVertRoundedIcon from '@mui/icons-material/MoreVertRounded';
 import MenuButton from '../MenuButton/MenuButton';
+import { useNavigate } from 'react-router-dom';
+import React from 'react';
+import { logoutUser } from '../../firebase/auth';
 
 const MenuItem = styled(MuiMenuItem)({
   margin: '2px 0',
 });
 
 export default function OptionsMenu() {
+  const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -24,6 +28,15 @@ export default function OptionsMenu() {
   const handleClose = () => {
     setAnchorEl(null);
   };
+  const handleLogOut = async () => {
+    try {
+      await logoutUser();
+      navigate('/login');
+    } catch (error) {
+      console.error('Logout failed:', error);
+    }
+  };
+
   return (
     <React.Fragment>
       <MenuButton
@@ -68,7 +81,7 @@ export default function OptionsMenu() {
             },
           }}
         >
-          <ListItemText>Logout</ListItemText>
+          <ListItemText onClick={handleLogOut}>Logout</ListItemText>
           <ListItemIcon>
             <LogoutRoundedIcon fontSize="small" />
           </ListItemIcon>

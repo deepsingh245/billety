@@ -1,4 +1,4 @@
-import * as React from 'react';
+
 import clsx from 'clsx';
 import { animated, useSpring } from '@react-spring/web';
 import { TransitionProps } from '@mui/material/transitions';
@@ -19,6 +19,7 @@ import { TreeItemIcon } from '@mui/x-tree-view/TreeItemIcon';
 import { TreeItemProvider } from '@mui/x-tree-view/TreeItemProvider';
 import { TreeViewBaseItem } from '@mui/x-tree-view/models';
 import { useTheme } from '@mui/material/styles';
+import React from 'react';
 
 type Color = 'blue' | 'green';
 

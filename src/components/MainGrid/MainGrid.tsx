@@ -1,12 +1,8 @@
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Copyright from '../internals/components/Copyright';
 import ChartUserByCountry from '../ChartUserByCountry/ChartUserByCountry';
-import CustomizedTreeView from '../CustomizedTreeView/CustomizedTreeView';
-import CustomizedDataGrid from '../CustomizedDataGrid/CustomizedDataGrid';
-import HighlightedCard from '../HighlightedCard/HighlightedCard';
 import PageViewsBarChart from '../PageViewsBarChart/PageViewsBarChart';
 import SessionsChart from '../SessionsChart/SessionsChart';
 import StatCard, { StatCardProps } from '../StatCard/StatCard';
@@ -62,9 +58,9 @@ export default function MainGrid() {
             <StatCard {...card} />
           </Grid>
         ))}
-        <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
+        {/* <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
           <HighlightedCard />
-        </Grid>
+        </Grid> */}
         <Grid size={{ xs: 12, md: 6 }}>
           <SessionsChart />
         </Grid>
@@ -72,20 +68,8 @@ export default function MainGrid() {
           <PageViewsBarChart />
         </Grid>
       </Grid>
-      <Typography component="h2" variant="h6" sx={{ mb: 2 }}>
-        Details
-      </Typography>
-      <Grid container spacing={2} columns={12}>
-        <Grid size={{ xs: 12, lg: 9 }}>
-          <CustomizedDataGrid />
-        </Grid>
-        <Grid size={{ xs: 12, lg: 3 }}>
-          <Stack gap={2} direction={{ xs: 'column', sm: 'row', lg: 'column' }}>
-            <CustomizedTreeView />
+      
             <ChartUserByCountry />
-          </Stack>
-        </Grid>
-      </Grid>
       <Copyright sx={{ my: 4 }} />
     </Box>
   );

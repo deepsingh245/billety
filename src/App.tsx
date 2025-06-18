@@ -1,7 +1,7 @@
-import { Suspense, useState } from 'react'
-import { routes } from "@/routes";
+import { Suspense } from 'react'
+import { routes } from "./routes";
 import './App.css'
-import { BrowserRouter, useRoutes } from 'react-router-dom';
+import { HashRouter, useRoutes } from 'react-router-dom';
 
 function RoutesWrapper() {
   const element = useRoutes(routes);
@@ -9,12 +9,11 @@ function RoutesWrapper() {
 }
 
 function App() {
-  const [count, setCount] = useState(0)
 
     return (
-    <BrowserRouter>
+    <HashRouter>
       <RoutesWrapper />
-    </BrowserRouter>
+    </HashRouter>
   );
 
 }

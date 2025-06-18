@@ -1,18 +1,19 @@
-import * as React from 'react';
+
 import type {} from '@mui/x-date-pickers/themeAugmentation';
 import type {} from '@mui/x-charts/themeAugmentation';
 import type {} from '@mui/x-data-grid-pro/themeAugmentation';
 import type {} from '@mui/x-tree-view/themeAugmentation';
-import { alpha } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
 import { chartsCustomizations, dataGridCustomizations, datePickersCustomizations, treeViewCustomizations } from '../../shared/theme/customizations';
 import AppTheme from '../../shared/AppTheme';
 import SideMenu from '../../components/SideMenu/SideMenu';
-import AppNavbar from '../../components/AppNavbar/AppNavbar';
+
+import { Outlet } from 'react-router-dom';
 import Header from '../../components/Header/Header';
-import MainGrid from '../../components/MainGrid/MainGrid';
+import Stack from '@mui/material/Stack';
+import AppNavbar from '../../components/AppNavbar/AppNavbar';
+import { alpha } from '@mui/material/styles';
 
 const xThemeComponents = {
   ...chartsCustomizations,
@@ -27,7 +28,7 @@ export default function Dashboard(props: { disableCustomTheme?: boolean }) {
       <CssBaseline enableColorScheme />
       <Box sx={{ display: 'flex' }}>
         <SideMenu />
-        <AppNavbar />
+         <AppNavbar />
         {/* Main content */}
         <Box
           component="main"
@@ -49,7 +50,7 @@ export default function Dashboard(props: { disableCustomTheme?: boolean }) {
             }}
           >
             <Header />
-            <MainGrid />
+        <Outlet />
           </Stack>
         </Box>
       </Box>

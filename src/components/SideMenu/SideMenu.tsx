@@ -1,4 +1,4 @@
-import * as React from 'react';
+
 import { styled } from '@mui/material/styles';
 import Avatar from '@mui/material/Avatar';
 import MuiDrawer, { drawerClasses } from '@mui/material/Drawer';
@@ -8,7 +8,6 @@ import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import SelectContent from '../SelectContent/SelectContent';
 import MenuContent from '../MenuContent/MenuContent';
-import CardAlert from '../CardAlert/CardAlert';
 import OptionsMenu from '../OptionsMenu/OptionsMenu';
 
 const drawerWidth = 240;
@@ -40,6 +39,7 @@ export default function SideMenu() {
           display: 'flex',
           mt: 'calc(var(--template-frame-height, 0px) + 4px)',
           p: 1.5,
+          // height: 60,
         }}
       >
         <SelectContent />
@@ -54,7 +54,7 @@ export default function SideMenu() {
         }}
       >
         <MenuContent />
-        <CardAlert />
+        {/* <CardAlert /> */}
       </Box>
       <Stack
         direction="row"
@@ -74,10 +74,10 @@ export default function SideMenu() {
         />
         <Box sx={{ mr: 'auto' }}>
           <Typography variant="body2" sx={{ fontWeight: 500, lineHeight: '16px' }}>
-            Riley Carter
+            Deep Singh
           </Typography>
           <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-            riley@email.com
+            deep@email.com
           </Typography>
         </Box>
         <OptionsMenu />
