@@ -1,14 +1,14 @@
-import { DataGrid } from '@mui/x-data-grid';
-import { columns, rows } from '../internals/data/gridData';
+import { DataGrid } from "@mui/x-data-grid";
+// import { columns, rows } from '../internals/data/gridData';
 
-export default function CustomizedDataGrid() {
+export default function CustomizedDataGrid({ columns, rows }) {
   return (
     <DataGrid
       checkboxSelection
       rows={rows}
       columns={columns}
       getRowClassName={(params) =>
-        params.indexRelativeToCurrentPage % 2 === 0 ? 'even' : 'odd'
+        params.indexRelativeToCurrentPage % 2 === 0 ? "even" : "odd"
       }
       initialState={{
         pagination: { paginationModel: { pageSize: 20 } },
@@ -20,23 +20,23 @@ export default function CustomizedDataGrid() {
         filterPanel: {
           filterFormProps: {
             logicOperatorInputProps: {
-              variant: 'outlined',
-              size: 'small',
+              variant: "outlined",
+              size: "small",
             },
             columnInputProps: {
-              variant: 'outlined',
-              size: 'small',
-              sx: { mt: 'auto' },
+              variant: "outlined",
+              size: "small",
+              sx: { mt: "auto" },
             },
             operatorInputProps: {
-              variant: 'outlined',
-              size: 'small',
-              sx: { mt: 'auto' },
+              variant: "outlined",
+              size: "small",
+              sx: { mt: "auto" },
             },
             valueInputProps: {
               InputComponentProps: {
-                variant: 'outlined',
-                size: 'small',
+                variant: "outlined",
+                size: "small",
               },
             },
           },

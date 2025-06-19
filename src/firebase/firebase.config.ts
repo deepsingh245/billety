@@ -5,13 +5,13 @@ import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAQGnCKQonOLh2dqCS50pm1B7BIgepOvl4",
-  authDomain: "billety-f25d6.firebaseapp.com",
-  projectId: "billety-f25d6",
-  storageBucket: "billety-f25d6.firebasestorage.app",
-  messagingSenderId: "898036288290",
-  appId: "1:898036288290:web:c10056ab523101d97c737b",
-  measurementId: "G-53TH7WP1GJ"
+  apiKey: import.meta.env.VITE_FIREBASE_API,
+  authDomain: import.meta.env.AUTH_DOMAIN,
+  projectId: import.meta.env.PROJECT_ID,
+  storageBucket: import.meta.env.STORAGE_BKT,
+  messagingSenderId: import.meta.env.MESSAGING_SENDER_ID,
+  appId: import.meta.env.APP_ID,
+  measurementId: import.meta.env.MESSUREMENT_ID
 };
 
 const app = initializeApp(firebaseConfig);

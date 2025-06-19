@@ -1,5 +1,4 @@
 import {
-  getFirestore,
   doc,
   collection,
   setDoc,
@@ -12,27 +11,31 @@ import {
   where,
   DocumentData,
   CollectionReference,
+  QueryConstraint,
+  DocumentReference,
+  UpdateData,
 } from "firebase/firestore";
-import { initializeApp } from "firebase/app";
+import { db } from "./firebase.config";
 
-const firebaseConfig = {
-  apiKey: "your-api-key",
-  authDomain: "your-project.firebaseapp.com",
-  projectId: "your-project-id",
-  storageBucket: "your-project.appspot.com",
-  messagingSenderId: "your-id",
-  appId: "your-app-id",
-};
+// Type for where filter operators (manual because Firebase doesn't export it directly)
+type WhereFilterOp =
+  | "<"
+  | "<="
+  | "=="
+  | "!="
+  | ">="
+  | ">"
+  | "array-contains"
+  | "in"
+  | "not-in"
+  | "array-contains-any";
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
-// ✅ Helper to get a typed collection reference
+// Helper to get typed collection reference
 const getCollectionRef = <T = DocumentData>(path: string): CollectionReference<T> => {
   return collection(db, path) as CollectionReference<T>;
 };
 
-// ✅ Create a document
+// Create a document (auto-ID or custom ID)
 export async function createDocument<T>(
   collectionPath: string,
   data: T,
@@ -41,7 +44,7 @@ export async function createDocument<T>(
   try {
     const ref = customId
       ? doc(db, collectionPath, customId)
-      : doc(getCollectionRef(collectionPath));
+      : doc(collection(db, collectionPath)); // Corrected
     await setDoc(ref, data);
     console.log(`Document created in ${collectionPath} ${customId ? `with ID ${customId}` : ""}`);
   } catch (error) {
@@ -49,7 +52,7 @@ export async function createDocument<T>(
   }
 }
 
-// ✅ Update a document
+// Update a document
 export async function updateDocument<T>(
   collectionPath: string,
   docId: string,
@@ -57,14 +60,14 @@ export async function updateDocument<T>(
 ): Promise<void> {
   try {
     const ref = doc(db, collectionPath, docId);
-    await updateDoc(ref, data);
+    await updateDoc(ref as DocumentReference<DocumentData, T>, data as UpdateData<T>);
     console.log(`Document ${docId} updated in ${collectionPath}`);
   } catch (error) {
     console.error("Error updating document:", error);
   }
 }
 
-// ✅ Delete a document
+// Delete a document
 export async function deleteDocument(
   collectionPath: string,
   docId: string
@@ -78,7 +81,7 @@ export async function deleteDocument(
   }
 }
 
-// ✅ Fetch a single document
+// Fetch a single document
 export async function getDocument<T>(
   collectionPath: string,
   docId: string
@@ -95,18 +98,17 @@ export async function getDocument<T>(
   }
 }
 
-// ✅ Fetch all documents in a collection (optionally with filters)
+// Fetch all documents in a collection (with optional filters)
 export async function getAllDocuments<T>(
   collectionPath: string,
-  filters?: [string, FirebaseFirestore.WhereFilterOp, any][]
+  filters?: [string, WhereFilterOp, any][]
 ): Promise<T[]> {
   try {
-    let q = getCollectionRef<T>(collectionPath);
+    let ref = getCollectionRef<T>(collectionPath);
 
-    if (filters && filters.length > 0) {
-      const firestoreFilters = filters.map(([field, op, val]) => where(field, op, val));
-      q = query(q, ...firestoreFilters) as any;
-    }
+    let q = filters && filters.length
+      ? query(ref, ...filters.map(([f, op, v]) => where(f, op, v) as QueryConstraint))
+      : ref;
 
     const snapshot = await getDocs(q);
     return snapshot.docs.map((doc) => doc.data() as T);
@@ -116,19 +118,18 @@ export async function getAllDocuments<T>(
   }
 }
 
-// ✅ Real-time listener
+// Real-time listener
 export function listenToCollection<T>(
   collectionPath: string,
   onUpdate: (data: T[]) => void,
-  filters?: [string, FirebaseFirestore.WhereFilterOp, any][]
+  filters?: [string, WhereFilterOp, any][]
 ): () => void {
   try {
-    let q = getCollectionRef<T>(collectionPath);
+    let ref = getCollectionRef<T>(collectionPath);
 
-    if (filters && filters.length > 0) {
-      const firestoreFilters = filters.map(([field, op, val]) => where(field, op, val));
-      q = query(q, ...firestoreFilters) as any;
-    }
+    let q = filters && filters.length
+      ? query(ref, ...filters.map(([f, op, v]) => where(f, op, v) as QueryConstraint))
+      : ref;
 
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const data = snapshot.docs.map((doc) => doc.data() as T);

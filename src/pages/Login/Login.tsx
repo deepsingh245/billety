@@ -19,12 +19,10 @@ import ColorModeSelect from "../../shared/ColorModeSelect";
 import { useNavigate } from "react-router-dom";
 import React, { FormEvent } from "react";
 import { loginUser } from "../../firebase/auth";
-import OutlinedInput from "@mui/material/OutlinedInput";
 import InputAdornment from "@mui/material/InputAdornment";
 import IconButton from "@mui/material/IconButton";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import InputLabel from "@mui/material/InputLabel";
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: "flex",
@@ -189,8 +187,9 @@ export default function Login(props: { disableCustomTheme?: boolean }) {
             <FormControl variant="outlined" fullWidth>
               <FormLabel htmlFor="password">Password</FormLabel>
               <TextField
-                id="outlined-adornment-password"
+                id="password"
                 type={showPassword ? "text" : "password"}
+                name="password"
                 variant="outlined"
                 placeholder="******"
                 fullWidth

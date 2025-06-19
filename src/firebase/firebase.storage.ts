@@ -1,6 +1,6 @@
 // src/lib/firebase/storage.ts
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { storage } from "./config";
+import { storage } from "./firebase.config.ts";
 
 export const uploadImage = async (
   file: File,

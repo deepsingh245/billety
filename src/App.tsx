@@ -1,7 +1,8 @@
-import { Suspense } from 'react'
+import { Suspense } from "react";
 import { routes } from "./routes";
-import './App.css'
-import { HashRouter, useRoutes } from 'react-router-dom';
+import "./App.css";
+import { HashRouter, useRoutes } from "react-router-dom";
+import { GlobalUIProvider } from "./context/globalUIContext";
 
 function RoutesWrapper() {
   const element = useRoutes(routes);
@@ -9,13 +10,13 @@ function RoutesWrapper() {
 }
 
 function App() {
-
-    return (
+  return (
     <HashRouter>
-      <RoutesWrapper />
+      <GlobalUIProvider>
+        <RoutesWrapper />
+      </GlobalUIProvider>
     </HashRouter>
   );
-
 }
 
-export default App
+export default App;
