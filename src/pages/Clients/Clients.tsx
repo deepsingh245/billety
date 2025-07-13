@@ -2,90 +2,17 @@ import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import CustomizedDataGrid from "../../components/CustomizedDataGrid/CustomizedDataGrid";
 import Stack from "@mui/material/Stack";
-import { GridCellParams, GridRowsProp, GridColDef } from "@mui/x-data-grid";
-
-const clients = [
-  {
-    id: "client001",
-    name: "Alice Johnson",
-    email: "alice.johnson@techcorp.com",
-    phone: "+1-555-0101",
-    company: "TechCorp",
-    receivables: 3200,
-  },
-  {
-    id: "client002",
-    name: "Brian Lee",
-    email: "brian.lee@freshmedia.com",
-    phone: "+1-555-0102",
-    company: "Fresh Media",
-    receivables: 1450,
-  },
-  {
-    id: "client003",
-    name: "Carla Gomez",
-    email: "carla.gomez@greengrids.com",
-    phone: "+1-555-0103",
-    company: "Green Grids",
-    receivables: 7800,
-  },
-  {
-    id: "client004",
-    name: "David Singh",
-    email: "david.singh@buildsmart.com",
-    phone: "+1-555-0104",
-    company: "BuildSmart",
-    receivables: 5600,
-  },
-  {
-    id: "client005",
-    name: "Eva Chen",
-    email: "eva.chen@byteworks.io",
-    phone: "+1-555-0105",
-    company: "ByteWorks",
-    receivables: 2200,
-  },
-  {
-    id: "client006",
-    name: "Frank Brown",
-    email: "frank.brown@oceanview.com",
-    phone: "+1-555-0106",
-    company: "OceanView",
-    receivables: 1500,
-  },
-  {
-    id: "client007",
-    name: "Grace Kim",
-    email: "grace.kim@novaplan.com",
-    phone: "+1-555-0107",
-    company: "NovaPlan",
-    receivables: 9400,
-  },
-  {
-    id: "client008",
-    name: "Henry Wilson",
-    email: "henry.wilson@skyline.io",
-    phone: "+1-555-0108",
-    company: "Skyline Systems",
-    receivables: 6100,
-  },
-  {
-    id: "client009",
-    name: "Isabella Rivera",
-    email: "isabella.rivera@futurefit.com",
-    phone: "+1-555-0109",
-    company: "FutureFit",
-    receivables: 2750,
-  },
-  {
-    id: "client010",
-    name: "James Carter",
-    email: "james.carter@mountainpeak.com",
-    phone: "+1-555-0110",
-    company: "Mountain Peak Logistics",
-    receivables: 4300,
-  },
-];
+import { GridColDef } from "@mui/x-data-grid";
+import { Button } from "@mui/material";
+import React, { useEffect, useState } from "react";
+import Box from "@mui/material/Box";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import AddClientForm from "../../components/AddClientForm/AddClientForm";
+import { colorSchemes } from "../../shared/themePrimitives";
+import { getAllDocuments } from "../../firebase/firebaseUtils";
+import { GlobalUIService } from "../../utils/GlobalUIService";
 
 const columns: GridColDef[] = [
   { field: "name", headerName: "Name", flex: 1.5, minWidth: 70 },
@@ -115,12 +42,75 @@ const columns: GridColDef[] = [
   },
 ];
 
-function Clients() {
+const Clients = () => {
+  const [clients, setClients] = useState([]);
+  const [open, setOpen] = React.useState(false);
+  const handleClickOpen = () => {
+    GlobalUIService.setLoading(false);
+    setOpen(true);
+  };
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  useEffect(() => {
+    const fetchClients = async () => {
+      GlobalUIService.setLoading(true);
+      try {
+        const data = await getAllDocuments("clients");
+        console.log("🚀 ~ fetchClients ~ data:", data);
+        setClients(data);
+        GlobalUIService.setLoading(false);
+      } catch (error) {
+        GlobalUIService.setLoading(false);
+        console.error("Error fetching clients:", error);
+      }
+    };
+
+    fetchClients();
+  }, []);
+
   return (
     <Stack width={"100%"}>
-      <Typography component="h2" variant="h6" sx={{ mb: 2 }}>
-        Details
-      </Typography>
+      <Stack
+        spacing={2}
+        direction={"row"}
+        marginY={2}
+        display={"flex"}
+        justifyContent={"space-between"}
+        alignItems={"center"}
+      >
+        <Typography component="h2" variant="h6" sx={{ mb: 2 }}>
+          Details
+        </Typography>
+        <Button
+          variant="outlined"
+          onClick={handleClickOpen}
+          sx={{ width: "fit-content" }}
+        >
+          Add Client
+        </Button>
+      </Stack>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle
+          id="alert-dialog-title"
+          sx={{ backgroundColor: colorSchemes.dark.palette.background.paper }}
+        >
+          {"Add Client"}
+        </DialogTitle>
+        <DialogContent
+          sx={{ backgroundColor: colorSchemes.dark.palette.background.paper }}
+        >
+          <Box sx={{ width: "100%" }}>
+            <AddClientForm />
+          </Box>
+        </DialogContent>
+      </Dialog>
       <Grid container spacing={2} columns={12}>
         <Grid size={{ xs: 12, lg: 12 }}>
           <CustomizedDataGrid columns={columns} rows={clients} />
@@ -133,6 +123,6 @@ function Clients() {
       </Grid>
     </Stack>
   );
-}
+};
 
 export default Clients;

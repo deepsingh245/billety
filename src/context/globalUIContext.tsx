@@ -13,6 +13,7 @@ import {
   DialogActions,
   Button,
   Snackbar,
+  Alert,
 } from "@mui/material";
 import { setUIController } from "../utils/GlobalUIService";
 import Loader from "../components/Loader/Loader";
@@ -192,9 +193,17 @@ export const GlobalUIProvider = ({ children }: { children: ReactNode }) => {
         open={toastOpen}
         autoHideDuration={3000}
         onClose={() => setToastOpen(false)}
-        message={toastMessage}
-        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-      />
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      >
+        <Alert
+          onClose={() => setToastOpen(false)}
+          severity="success"
+          variant="filled"
+          sx={{ width: "100%" }}
+        >
+          {toastMessage}
+        </Alert>
+      </Snackbar>
 
       {/* Loader */}
       {loading && (
@@ -205,7 +214,7 @@ export const GlobalUIProvider = ({ children }: { children: ReactNode }) => {
             left: 0,
             width: "100vw",
             height: "100vh",
-            backgroundColor: "rgba(255, 255, 255, 0.6)",
+            backgroundColor: "rgba(34, 33, 33, 0.59)",
             backdropFilter: "blur(4px)",
             zIndex: 2000,
             display: "flex",

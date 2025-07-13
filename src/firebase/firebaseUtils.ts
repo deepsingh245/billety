@@ -104,17 +104,16 @@ export async function getAllDocuments<T>(
   filters?: [string, WhereFilterOp, any][]
 ): Promise<T[]> {
   try {
-    let ref = getCollectionRef<T>(collectionPath);
-
-    let q = filters && filters.length
-      ? query(ref, ...filters.map(([f, op, v]) => where(f, op, v) as QueryConstraint))
+    const ref = collection(db, collectionPath);
+    console.log("🚀 ~ ref:", ref)
+    const q = filters?.length
+      ? query(ref, ...filters.map(([field, op, value]) => where(field, op, value) as QueryConstraint))
       : ref;
-
     const snapshot = await getDocs(q);
-    return snapshot.docs.map((doc) => doc.data() as T);
-  } catch (error) {
-    console.error("Error getting documents:", error);
-    return [];
+    return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() } as T));
+  } catch (error: any) {
+    console.error(`Error getting documents from ${collectionPath}:`, error.message, error.code, error.stack);
+    throw error; // Propagate error for better debugging
   }
 }
 

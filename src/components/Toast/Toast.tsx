@@ -17,7 +17,7 @@ export default function Toast() {
     if (reason === "clickaway") {
       return;
     }
-
+    console.log(event);
     setOpen(false);
   };
 

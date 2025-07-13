@@ -189,6 +189,8 @@ export default function Login(props: { disableCustomTheme?: boolean }) {
               <TextField
                 id="password"
                 type={showPassword ? "text" : "password"}
+                error={passwordError}
+                helperText={passwordErrorMessage}
                 name="password"
                 variant="outlined"
                 placeholder="******"

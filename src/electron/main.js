@@ -6,7 +6,8 @@ const createWindow = () => {
         width: 800,
         height: 600
     });
-    win.loadFile(path.join(app.getAppPath() + '/dist-react/index.html'))
+    win.loadFile(path.join(app.getAppPath() + '/dist-react/index.html'));
+    win.setMenu(null);
 }
 
 app.whenReady().then(() => {
@@ -24,8 +25,3 @@ app.on('window-all-closed', () => {
         app.quit()
     }
 })
-
-// app.on('ready', () => {
-//     const win = new BrowserWindow({});
-//     win.loadFile(path.join(app.getAppPath() + '/dist-react/index.html'))
-// })
