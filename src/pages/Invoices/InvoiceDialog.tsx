@@ -34,6 +34,7 @@ import AddIcon from "@mui/icons-material/Add";
 import { useNavigate } from "react-router-dom";
 import { GlobalUIService } from "../../utils/GlobalUIService";
 import { handleError } from "../../utils/error.utils";
+import { useData } from "../../context/dataContext";
 
 interface InvoiceDialogProps {
   open: boolean;
@@ -49,6 +50,7 @@ export default function InvoiceDialog({
   title = "Create Invoice",
 }: InvoiceDialogProps) {
   const navigate = useNavigate();
+  const { refreshData } = useData();
   const [activeStep, setActiveStep] = useState(0);
   const [clients, setClients] = useState<Client[]>([]);
   const [items, setItems] = useState<Item[]>([]);
@@ -70,8 +72,8 @@ export default function InvoiceDialog({
   const fetchData = async () => {
     try {
       const [clientsData, itemsData] = await Promise.all([
-        getAllDocuments(APP_CONSTANTS.COLLECTIONS.CLIENTS),
-        getAllDocuments(APP_CONSTANTS.COLLECTIONS.ITEMS),
+        getAllDocuments<Client>(APP_CONSTANTS.COLLECTIONS.CLIENTS),
+        getAllDocuments<Item>(APP_CONSTANTS.COLLECTIONS.ITEMS),
       ]);
       setClients(clientsData);
       setItems(itemsData);
@@ -124,6 +126,7 @@ export default function InvoiceDialog({
       };
 
       const docRef = await createDocument(APP_CONSTANTS.COLLECTIONS.INVOICES, invoiceData);
+      await refreshData();
       GlobalUIService.setLoading(false);
       onClose();
       // Navigate to the edit/view page

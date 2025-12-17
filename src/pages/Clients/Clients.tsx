@@ -4,17 +4,15 @@ import CustomizedDataGrid from "../../components/CustomizedDataGrid/CustomizedDa
 import Stack from "@mui/material/Stack";
 import { GridColDef } from "@mui/x-data-grid";
 import { Button } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import Box from "@mui/material/Box";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import AddClientForm from "../../components/AddClientForm/AddClientForm";
 import { colorSchemes } from "../../shared/themePrimitives";
-import { APP_CONSTANTS } from "../../constants/app.constants";
-import { getAllDocuments } from "../../firebase/firebaseUtils";
 import { GlobalUIService } from "../../utils/GlobalUIService";
-import { handleError } from "../../utils/error.utils";
+import { useData } from "../../context/dataContext";
 
 const columns: GridColDef[] = [
   { field: "name", headerName: "Name", flex: 1.5, minWidth: 70 },
@@ -45,8 +43,13 @@ const columns: GridColDef[] = [
 ];
 
 const Clients = () => {
-  const [clients, setClients] = useState([]);
+  const { clients, loading, refreshData } = useData();
   const [open, setOpen] = React.useState(false);
+
+  useEffect(() => {
+    GlobalUIService.setLoading(loading);
+  }, [loading]);
+
   const handleClickOpen = () => {
     GlobalUIService.setLoading(false);
     setOpen(true);
@@ -54,23 +57,6 @@ const Clients = () => {
   const handleClose = () => {
     setOpen(false);
   };
-
-  useEffect(() => {
-    const fetchClients = async () => {
-      GlobalUIService.setLoading(true);
-      try {
-        const data = await getAllDocuments(APP_CONSTANTS.COLLECTIONS.CLIENTS);
-        console.log("🚀 ~ fetchClients ~ data:", data);
-        setClients(data);
-        GlobalUIService.setLoading(false);
-      } catch (error) {
-        GlobalUIService.setLoading(false);
-        handleError(error, "Error fetching clients");
-      }
-    };
-
-    fetchClients();
-  }, []);
 
   return (
     <Stack width={"100%"}>
@@ -109,7 +95,10 @@ const Clients = () => {
           sx={{ backgroundColor: colorSchemes.dark.palette.background.paper }}
         >
           <Box sx={{ width: "100%" }}>
-            <AddClientForm />
+            <AddClientForm onSuccess={() => {
+              handleClose();
+              refreshData();
+            }} />
           </Box>
         </DialogContent>
       </Dialog>

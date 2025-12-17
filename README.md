@@ -39,6 +39,29 @@ Billety is a cross‑platform billing and invoicing system built with React, Ele
 
 ---
 
+## 🔄 Application Flow
+
+1. **Authentication**: Secure login via email/password.
+2. **Dashboard**: Immediate insight into business performance (Total Clients, Invoices, Items).
+3. **Data Management**:
+    - **Clients**: Create and manage a comprehensive database of clients.
+    - **Items**: Define products and services with specific rates (per kg/piece).
+4. **Invoice Creation**:
+    - Select a client from the database.
+    - Add items dynamically.
+    - Review totals and create the invoice.
+5. **Output**: Generate professional PDFs for billing.
+
+## 🛠️ Services Provided
+
+- **Smart Invoicing**: Automated calculation of totals, taxes, and receivables.
+- **Client & Inventory Databases**: Centralized storage for all business entities.
+- **Real-Time Data**: Instant synchronization across all connected devices using **Firebase**.
+- **Global Context**: Efficient state management ensuring data consistency throughout the user session.
+- **Analytics**: Visual charts and statistics to track growth and user engagement.
+
+---
+
 ## 🛠️ Tech Stack
 
 | Layer          | Technology            |

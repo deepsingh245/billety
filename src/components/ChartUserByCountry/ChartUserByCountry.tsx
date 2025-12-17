@@ -8,48 +8,9 @@ import CardContent from '@mui/material/CardContent';
 import Box from '@mui/material/Box';
 import Stack from '@mui/material/Stack';
 import LinearProgress, { linearProgressClasses } from '@mui/material/LinearProgress';
-
-import {
-  IndiaFlag,
-  UsaFlag,
-  BrazilFlag,
-  GlobeFlag,
-} from '../internals/components/CustomIcons';
 import React from 'react';
 
-const data = [
-  { label: 'India', value: 50000 },
-  { label: 'USA', value: 35000 },
-  { label: 'Brazil', value: 10000 },
-  { label: 'Other', value: 5000 },
-];
 
-const countries = [
-  {
-    name: 'India',
-    value: 50,
-    flag: <IndiaFlag />,
-    color: 'hsl(220, 25%, 65%)',
-  },
-  {
-    name: 'USA',
-    value: 35,
-    flag: <UsaFlag />,
-    color: 'hsl(220, 25%, 45%)',
-  },
-  {
-    name: 'Brazil',
-    value: 10,
-    flag: <BrazilFlag />,
-    color: 'hsl(220, 25%, 30%)',
-  },
-  {
-    name: 'Other',
-    value: 5,
-    flag: <GlobeFlag />,
-    color: 'hsl(220, 25%, 20%)',
-  },
-];
 
 interface StyledTextProps {
   variant: 'primary' | 'secondary';
@@ -115,14 +76,35 @@ function PieCenterLabel({ primaryText, secondaryText }: PieCenterLabelProps) {
   );
 }
 
-const colors = [
-  'hsl(220, 20%, 65%)',
-  'hsl(220, 20%, 42%)',
-  'hsl(220, 20%, 35%)',
-  'hsl(220, 20%, 25%)',
-];
 
-export default function ChartUserByCountry() {
+
+interface ChartUserByCountryProps {
+  data: {
+    name: string;
+    value: number;
+    color: string;
+    flag?: React.ReactNode;
+  }[];
+  title?: string;
+  totalLabel?: string;
+  totalValue?: string;
+}
+
+export default function ChartUserByCountry({
+  data,
+  title = "Users by country",
+  totalLabel = "Total",
+  totalValue = "100K",
+}: ChartUserByCountryProps) {
+
+  const pieData = data.map((item) => ({
+    label: item.name,
+    value: item.value,
+    color: item.color,
+  }));
+
+  const colors = data.map(item => item.color);
+
   return (
     <Card
       variant="outlined"
@@ -130,7 +112,7 @@ export default function ChartUserByCountry() {
     >
       <CardContent>
         <Typography component="h2" variant="subtitle2">
-          Users by country
+          {title}
         </Typography>
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           <PieChart
@@ -143,7 +125,7 @@ export default function ChartUserByCountry() {
             }}
             series={[
               {
-                data,
+                data: pieData,
                 innerRadius: 75,
                 outerRadius: 100,
                 paddingAngle: 0,
@@ -154,16 +136,16 @@ export default function ChartUserByCountry() {
             width={260}
             hideLegend
           >
-            <PieCenterLabel primaryText="98.5K" secondaryText="Total" />
+            <PieCenterLabel primaryText={totalValue} secondaryText={totalLabel} />
           </PieChart>
         </Box>
-        {countries.map((country, index) => (
+        {data.map((item, index) => (
           <Stack
             key={index}
             direction="row"
             sx={{ alignItems: 'center', gap: 2, pb: 2 }}
           >
-            {country.flag}
+            {item.flag}
             <Stack sx={{ gap: 1, flexGrow: 1 }}>
               <Stack
                 direction="row"
@@ -174,19 +156,19 @@ export default function ChartUserByCountry() {
                 }}
               >
                 <Typography variant="body2" sx={{ fontWeight: '500' }}>
-                  {country.name}
+                  {item.name}
                 </Typography>
                 <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                  {country.value}%
+                  {item.value}%
                 </Typography>
               </Stack>
               <LinearProgress
                 variant="determinate"
                 aria-label="Number of users by country"
-                value={country.value}
+                value={item.value}
                 sx={{
                   [`& .${linearProgressClasses.bar}`]: {
-                    backgroundColor: country.color,
+                    backgroundColor: item.color,
                   },
                 }}
               />

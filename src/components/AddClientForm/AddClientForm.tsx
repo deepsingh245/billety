@@ -12,7 +12,11 @@ import { Client } from "../../interfaces/client.interface";
 import { createDocument } from "../../firebase/firebaseUtils";
 import { GlobalUIService } from "../../utils/GlobalUIService";
 
-export default function AddClientForm() {
+interface AddClientFormProps {
+  onSuccess?: () => void;
+}
+
+export default function AddClientForm({ onSuccess }: AddClientFormProps) {
   const {
     register,
     handleSubmit,
@@ -24,12 +28,15 @@ export default function AddClientForm() {
     console.log(JSON.stringify(data, null, 2));
     await createDocument("clients", data);
     GlobalUIService.setLoading(false);
+    if (onSuccess) {
+      onSuccess();
+    }
   };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} noValidate>
       <Grid container spacing={3}>
-        <Grid xs={12} md={6}>
+        <Grid size={{ xs: 12, md: 6 }}>
           <FormControl fullWidth error={!!errors.name}>
             <FormLabel required>Name</FormLabel>
             <OutlinedInput

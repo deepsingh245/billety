@@ -46,7 +46,6 @@ export async function createDocument<T>(
       ? doc(db, collectionPath, customId)
       : doc(collection(db, collectionPath)); // Corrected
     await setDoc(ref, data);
-    console.log(`Document created in ${collectionPath} ${customId ? `with ID ${customId}` : ""}`);
   } catch (error) {
     console.error("Error creating document:", error);
   }
@@ -61,7 +60,6 @@ export async function updateDocument<T>(
   try {
     const ref = doc(db, collectionPath, docId);
     await updateDoc(ref as DocumentReference<DocumentData, T>, data as UpdateData<T>);
-    console.log(`Document ${docId} updated in ${collectionPath}`);
   } catch (error) {
     console.error("Error updating document:", error);
   }
@@ -75,7 +73,6 @@ export async function deleteDocument(
   try {
     const ref = doc(db, collectionPath, docId);
     await deleteDoc(ref);
-    console.log(`Document ${docId} deleted from ${collectionPath}`);
   } catch (error) {
     console.error("Error deleting document:", error);
   }
@@ -105,7 +102,6 @@ export async function getAllDocuments<T>(
 ): Promise<T[]> {
   try {
     const ref = collection(db, collectionPath);
-    console.log("🚀 ~ ref:", ref)
     const q = filters?.length
       ? query(ref, ...filters.map(([field, op, value]) => where(field, op, value) as QueryConstraint))
       : ref;
@@ -138,6 +134,6 @@ export function listenToCollection<T>(
     return unsubscribe;
   } catch (error) {
     console.error("Error setting up listener:", error);
-    return () => {};
+    return () => { };
   }
 }

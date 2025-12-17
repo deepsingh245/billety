@@ -7,7 +7,29 @@ import Stack from '@mui/material/Stack';
 import { BarChart } from '@mui/x-charts/BarChart';
 import { useTheme } from '@mui/material/styles';
 
-export default function PageViewsBarChart() {
+interface PageViewsBarChartProps {
+  xAxisLabels: string[];
+  series: {
+    id: string;
+    label: string;
+    data: number[];
+  }[];
+  title?: string;
+  subtitle?: string;
+  total?: string;
+  trend?: string;
+  trendColor?: 'success' | 'error' | 'default';
+}
+
+export default function PageViewsBarChart({
+  xAxisLabels,
+  series,
+  title = "Page views and downloads",
+  subtitle = "Page views and downloads for the last 6 months",
+  total = "1.3M",
+  trend = "-8%",
+  trendColor = "error"
+}: PageViewsBarChartProps) {
   const theme = useTheme();
   const colorPalette = [
     (theme.vars || theme).palette.primary.dark,
@@ -18,7 +40,7 @@ export default function PageViewsBarChart() {
     <Card variant="outlined" sx={{ width: '100%' }}>
       <CardContent>
         <Typography component="h2" variant="subtitle2" gutterBottom>
-          Page views and downloads
+          {title}
         </Typography>
         <Stack sx={{ justifyContent: 'space-between' }}>
           <Stack
@@ -30,12 +52,12 @@ export default function PageViewsBarChart() {
             }}
           >
             <Typography variant="h4" component="p">
-              1.3M
+              {total}
             </Typography>
-            <Chip size="small" color="error" label="-8%" />
+            <Chip size="small" color={trendColor} label={trend} />
           </Stack>
           <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-            Page views and downloads for the last 6 months
+            {subtitle}
           </Typography>
         </Stack>
         <BarChart
@@ -45,31 +67,12 @@ export default function PageViewsBarChart() {
             {
               scaleType: 'band',
               categoryGapRatio: 0.5,
-              data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+              data: xAxisLabels,
               height: 24,
             },
           ]}
           yAxis={[{ width: 50 }]}
-          series={[
-            {
-              id: 'page-views',
-              label: 'Page views',
-              data: [2234, 3872, 2998, 4125, 3357, 2789, 2998],
-              stack: 'A',
-            },
-            {
-              id: 'downloads',
-              label: 'Downloads',
-              data: [3098, 4215, 2384, 2101, 4752, 3593, 2384],
-              stack: 'A',
-            },
-            {
-              id: 'conversions',
-              label: 'Conversions',
-              data: [4051, 2275, 3129, 4693, 3904, 2038, 2275],
-              stack: 'A',
-            },
-          ]}
+          series={series.map(s => ({ ...s, stack: 'A' }))}
           height={250}
           margin={{ left: 0, right: 0, top: 20, bottom: 0 }}
           grid={{ horizontal: true }}
