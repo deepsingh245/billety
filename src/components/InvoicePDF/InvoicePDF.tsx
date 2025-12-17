@@ -8,13 +8,14 @@ interface InvoicePDFProps {
 export default function InvoicePDF({ invoice }: InvoicePDFProps) {
   return (
     <Paper
-      elevation={3}
+      // elevation={3}
       sx={{
         p: 4,
         minHeight: '800px',
         backgroundColor: 'white',
         color: 'black',
-        fontFamily: 'Arial, sans-serif'
+        fontFamily: 'Arial, sans-serif',
+        height: '100%'
       }}
     >
       {/* Header */}
@@ -49,10 +50,10 @@ export default function InvoicePDF({ invoice }: InvoicePDFProps) {
         <Table size="small">
           <TableHead>
             <TableRow sx={{ backgroundColor: '#f5f5f5' }}>
-              <TableCell sx={{ fontWeight: 'bold' }}>Item Description</TableCell>
-              <TableCell align="right" sx={{ fontWeight: 'bold' }}>Qty</TableCell>
-              <TableCell align="right" sx={{ fontWeight: 'bold' }}>Rate</TableCell>
-              <TableCell align="right" sx={{ fontWeight: 'bold' }}>Amount</TableCell>
+              <TableCell sx={{ fontWeight: 'bold', color: 'black' }}>Item Description</TableCell>
+              <TableCell align="right" sx={{ fontWeight: 'bold', color: 'black' }}>Qty</TableCell>
+              <TableCell align="right" sx={{ fontWeight: 'bold', color: 'black' }}>Rate</TableCell>
+              <TableCell align="right" sx={{ fontWeight: 'bold', color: 'black' }}>Amount</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -63,8 +64,8 @@ export default function InvoicePDF({ invoice }: InvoicePDFProps) {
                   <Typography variant="caption" color="textSecondary">{item.description}</Typography>
                 </TableCell>
                 <TableCell align="right">{item.quantity}</TableCell>
-                <TableCell align="right">${item.rate.toFixed(2)}</TableCell>
-                <TableCell align="right">${(item.quantity * item.rate).toFixed(2)}</TableCell>
+                <TableCell align="right">{item.rate.toFixed(2)}</TableCell>
+                <TableCell align="right">{(item.quantity * item.rate).toFixed(2)}</TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -93,7 +94,7 @@ export default function InvoicePDF({ invoice }: InvoicePDFProps) {
       </Box>
 
       {/* Footer */}
-      <Box sx={{ mt: 8, textAlign: 'center', color: '#666' }}>
+      <Box sx={{ mt: 8, textAlign: 'center', color: '#666', alignSelf: 'end' }}>
         <Typography variant="body2">Thank you for your business!</Typography>
       </Box>
     </Paper>

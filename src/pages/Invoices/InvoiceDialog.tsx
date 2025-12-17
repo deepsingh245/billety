@@ -144,7 +144,7 @@ export default function InvoiceDialog({
     onClose();
   };
 
-  const steps = ["Select Client", "Add Items", "Review & Create"];
+  // const steps = ["Select Client", "Add Items", "Review & Create"];
 
   return (
     <Dialog

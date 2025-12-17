@@ -1,11 +1,13 @@
 import { DataGrid } from "@mui/x-data-grid";
+import { GridColDef, GridRowParams } from "@mui/x-data-grid";
 // import { columns, rows } from '../internals/data/gridData';
 
-export default function CustomizedDataGrid({ columns, rows }) {
+export default function CustomizedDataGrid({ columns, rows, onRowClick }: { columns: GridColDef[], rows: any[], onRowClick?: (params: GridRowParams) => void }) {
   return (
     <DataGrid
       checkboxSelection
       rows={rows}
+      onRowClick={onRowClick}
       columns={columns}
       getRowClassName={(params) =>
         params.indexRelativeToCurrentPage % 2 === 0 ? "even" : "odd"

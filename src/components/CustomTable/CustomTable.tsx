@@ -43,6 +43,7 @@ export default function CustomTable({
   const [selectedRows, setSelectedRows] = React.useState<any[]>([]);
 
   const handleChangePage = (event: unknown, newPage: number) => {
+    console.log("event:", event)
     setPage(newPage);
   };
 
@@ -68,6 +69,7 @@ export default function CustomTable({
   };
 
   const handleRowClick = (event: React.MouseEvent<unknown>, row: any) => {
+    console.log("event:", event)
     if (!checkboxSelection) return;
 
     const selectedIndex = selectedRows.findIndex(
@@ -98,10 +100,10 @@ export default function CustomTable({
   const isIndeterminate =
     selectedRows.length > 0 &&
     selectedRows.length <
-      rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).length;
+    rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).length;
   const isChecked =
     selectedRows.length ===
-      rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).length &&
+    rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).length &&
     rows.length > 0;
 
   // Avoid a layout jump when reaching the last page with empty rows.

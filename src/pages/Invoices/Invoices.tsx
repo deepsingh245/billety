@@ -1,58 +1,94 @@
-import { Button, Grid, Stack, Typography } from "@mui/material";
+import { Button, Chip, Grid, Stack, Typography } from "@mui/material";
 import { GridColDef } from "@mui/x-data-grid";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import CustomizedDataGrid from "../../components/CustomizedDataGrid/CustomizedDataGrid";
 import { GlobalUIService } from "../../utils/GlobalUIService";
 import { useData } from "../../context/dataContext";
 import InvoiceDialog from "./InvoiceDialog";
-
-// const invoice = [
-//   {
-//     amount: 1200,
-//     balance: 1200,
-//     customerName: "Alice Johnson",
-//     customerId: "client001",
-//     date: "2025-05-01",
-//     duedate: "2025-06-01",
-//     invoiceLink: "https://invoices.example.com/INV-1001",
-//     orderNumber: "INV-1001",
-//     status: "Unpaid",
-//   },
-const columns: GridColDef[] = [
-  { field: "name", headerName: "Name", flex: 1, minWidth: 70 },
-  {
-    field: "email",
-    headerName: "Email",
-    flex: 1.5,
-    minWidth: 200,
-  },
-  {
-    field: "phoneNumber",
-    headerName: "Phone Number",
-    flex: 1,
-    minWidth: 50,
-  },
-  {
-    field: "company",
-    headerName: "Company",
-    flex: 1,
-    minWidth: 120,
-  },
-  {
-    field: "receivables",
-    headerName: "Receivables",
-    flex: 1,
-    minWidth: 40,
-  },
-];
+import { Invoice } from "../../interfaces/invoice.interface";
+import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
+import { useNavigate } from "react-router-dom";
 
 const Invoices = () => {
   const { invoices, loading } = useData();
   const [open, setOpen] = useState(false);
+  const [selectedInvoices, setSelectedInvoices] = useState<Invoice[]>([]);
 
   useEffect(() => {
     GlobalUIService.setLoading(loading);
   }, [loading]);
+
+  const navigate = useNavigate();
+  const columns: GridColDef[] = useMemo(() => [
+    { field: "name", headerName: "Client Name", flex: 1, minWidth: 150 },
+    {
+      field: "email",
+      headerName: "Email Address",
+      flex: 1.5,
+      minWidth: 250,
+    },
+    {
+      field: "phone",
+      headerName: "Phone Number",
+      flex: 1,
+      minWidth: 100,
+    },
+    {
+      field: "date",
+      headerName: "Date",
+      flex: 1.5,
+      minWidth: 180,
+      renderCell: (param) => {
+        return (
+          <Typography variant="body2" sx={{ fontWeight: '500' }}>
+            {param.value}
+          </Typography>
+        );
+      },
+    },
+    {
+      field: "status",
+      headerName: "Status",
+      flex: 1,
+      minWidth: 100,
+      renderCell: (params) => {
+        return (
+          <Chip
+            sx={{
+              width: 'fit-cntent',
+              backgroundColor: params.value === 'Paid' ? 'green' : 'red'
+            }}
+            label={params.value}
+          />
+        );
+      },
+    },
+    {
+      field: "totalAmount",
+      headerName: "Total Amount",
+      flex: 1,
+      minWidth: 100,
+      type: 'number',
+    },
+    {
+      field: "actions",
+      headerName: "Actions",
+      flex: 1,
+      minWidth: 100,
+      renderCell: (params) => {
+        return (
+          <Stack direction="row" spacing={1}>
+            <Button
+              variant="outlined"
+              onClick={() => navigate(`/dashboard/invoices/${params.row.id}`)}
+            >
+              <RemoveRedEyeIcon />
+            </Button>
+          </Stack>
+        );
+      },
+    },
+  ], []);
 
   const handleClickOpen = () => {
     GlobalUIService.setLoading(false);
@@ -62,6 +98,14 @@ const Invoices = () => {
   const handleClose = () => {
     setOpen(false);
   };
+
+  const handleSendToClient = () => {
+    GlobalUIService.setLoading(false);
+    setTimeout(() => {
+      GlobalUIService.setLoading(false);
+    }, 2000);
+  };
+
   return (
     <Stack width={"100%"}>
       <Stack
@@ -91,8 +135,25 @@ const Invoices = () => {
       />
       <Grid container spacing={2} columns={12}>
         <Grid size={{ xs: 12, lg: 12 }}>
-          <CustomizedDataGrid columns={columns} rows={invoices} />
+          <CustomizedDataGrid columns={columns} rows={invoices?.map((invoice) => ({
+            ...invoice,
+            name: invoice?.client?.name,
+            email: invoice?.client?.email,
+            phone: invoice?.client?.phone,
+          }))}
+            onRowClick={(params) => {
+              setSelectedInvoices([params.row]);
+            }}
+          />
         </Grid>
+        <Button
+          variant="outlined"
+          onClick={handleSendToClient}
+          sx={{ width: "fit-content" }}
+          disabled={selectedInvoices?.length === 0}
+        >
+          Send to Client
+        </Button>
       </Grid>
     </Stack>
   );
