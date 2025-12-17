@@ -43,7 +43,7 @@ export default function AddClientForm() {
           </FormControl>
         </Grid>
 
-        <Grid item size={{ xs: 12, md: 6 }}>
+        <Grid size={{ xs: 12, md: 6 }}>
           <FormControl fullWidth error={!!errors.email}>
             <FormLabel required>Email</FormLabel>
             <OutlinedInput
@@ -64,7 +64,7 @@ export default function AddClientForm() {
           </FormControl>
         </Grid>
 
-        <Grid item size={{ xs: 12, md: 6 }}>
+        <Grid size={{ xs: 12, md: 6 }}>
           <FormControl fullWidth error={!!errors.phone}>
             <FormLabel required>Phone</FormLabel>
             <OutlinedInput
@@ -78,7 +78,7 @@ export default function AddClientForm() {
           </FormControl>
         </Grid>
 
-        <Grid item size={{ xs: 12, md: 6 }}>
+        <Grid size={{ xs: 12, md: 6 }}>
           <FormControl fullWidth error={!!errors.company}>
             <FormLabel required>Company</FormLabel>
             <OutlinedInput
@@ -92,7 +92,7 @@ export default function AddClientForm() {
           </FormControl>
         </Grid>
 
-        <Grid item size={{ xs: 12 }}>
+        <Grid size={{ xs: 12 }}>
           <FormControl fullWidth error={!!errors.receivables}>
             <FormLabel required>Receivables</FormLabel>
             <OutlinedInput
@@ -110,7 +110,7 @@ export default function AddClientForm() {
           </FormControl>
         </Grid>
 
-        <Grid item size={{ xs: 12 }}>
+        <Grid size={{ xs: 12 }}>
           <Button type="submit" variant="contained" color="primary">
             Submit Client
           </Button>

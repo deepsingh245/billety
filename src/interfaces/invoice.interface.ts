@@ -1,10 +1,24 @@
+import { Client } from "./client.interface";
+import { Item } from "./item.interface";
+
+export interface InvoiceItem extends Item {
+  quantity: number;
+  rate: number;
+}
+
 export interface Invoice {
-  amount: number;
-  balance: number;
-  customerName: string;
-  date: number;    
-  duedate: number; 
-  invoiceLink: string;
-  orderNumber: string;
-  status: 'Paid' | 'Unpaid' | 'Partially Paid';
+  id?: string;
+  client: Client;
+  items: InvoiceItem[];
+  date: string;
+  dueDate?: string;
+  status: 'draft' | 'sent' | 'paid';
+  totalAmount: number;
+  
+  // Legacy fields support
+  amount?: number;
+  balance?: number;
+  customerName?: string;
+  invoiceLink?: string;
+  orderNumber?: string;
 }

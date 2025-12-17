@@ -7,6 +7,12 @@ import { Button } from "@mui/material";
 import { getAllDocuments } from "../../firebase/firebaseUtils";
 import { useEffect, useState } from "react";
 import { GlobalUIService } from "../../utils/GlobalUIService";
+import { Collections } from "../../constants/collections.constants";
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import Box from "@mui/material/Box";
+import AddItemForm from "../../components/AddItemForm/AddItemForm";
 
 const columns: GridColDef[] = [
   { field: "name", headerName: "Name", flex: 1.5, minWidth: 200 },
@@ -45,6 +51,20 @@ const columns: GridColDef[] = [
 function Items() {
   const [items, setItems] = useState([]);
   const [open, setOpen] = useState(false);
+  
+  const fetchItems = async () => {
+    GlobalUIService.setLoading(true);
+    try {
+      const data = await getAllDocuments(Collections.ITEMS);
+      console.log("🚀 ~ fetchItems ~ data:", data);
+      setItems(data);
+      GlobalUIService.setLoading(false);
+    } catch (error) {
+      GlobalUIService.setLoading(false);
+      console.error("Error fetching items:", error);
+    }
+  };
+
   const handleClickOpen = () => {
     GlobalUIService.setLoading(false);
     setOpen(true);
@@ -53,36 +73,14 @@ function Items() {
     setOpen(false);
   };
 
-  useEffect(() => {
-    const fetchItems = async () => {
-      GlobalUIService.setLoading(true);
-      try {
-        const data = await getAllDocuments("items");
-        console.log("🚀 ~ fetchClients ~ data:", data);
-        setItems(data);
-        GlobalUIService.setLoading(false);
-      } catch (error) {
-        GlobalUIService.setLoading(false);
-        console.error("Error fetching items:", error);
-      }
-    };
+  const handleSuccess = () => {
+    handleClose();
+    fetchItems();
+  };
 
+  useEffect(() => {
     fetchItems();
   }, []);
-
-  // const handleUpload = async () => {
-  //   try {
-  //     GlobalUIService.setLoading(true);
-  //     const promises = itemsToUpload.map((item) => {
-  //       return createDocument("items", item);
-  //     });
-  //     await Promise.all(promises);
-  //     GlobalUIService.setLoading(false);
-  //   } catch (error) {
-  //     console.log("🚀 ~ handleUpload ~ error:", error);
-  //     GlobalUIService.setLoading(false);
-  //   }
-  // };
 
   return (
     <Stack width={"100%"}>
@@ -102,9 +100,24 @@ function Items() {
           onClick={handleClickOpen}
           sx={{ width: "fit-content" }}
         >
-          Add Client
+          Add Item
         </Button>
       </Stack>
+
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="add-item-dialog-title"
+        maxWidth="md"
+        fullWidth
+      >
+        <DialogTitle id="add-item-dialog-title">Add Item</DialogTitle>
+        <DialogContent>
+          <Box sx={{ mt: 2 }}>
+            <AddItemForm onSuccess={handleSuccess} />
+          </Box>
+        </DialogContent>
+      </Dialog>
 
       <Grid container spacing={2} columns={12}>
         <Grid size={{ xs: 12, lg: 12 }}>

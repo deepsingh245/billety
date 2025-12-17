@@ -141,6 +141,17 @@ export default function Login(props: { disableCustomTheme?: boolean }) {
     return isValid;
   };
 
+  const loginAsGuest = async () => {
+    try {
+      const user = await loginUser("guest@billety.com", "guest@123");
+      if (user) {
+        navigate("/dashboard/home");
+      }
+    } catch (error) {
+      console.error("Login failed:", error);
+    }
+  };
+
   return (
     <AppTheme {...props}>
       <CssBaseline enableColorScheme />
@@ -230,6 +241,14 @@ export default function Login(props: { disableCustomTheme?: boolean }) {
               onClick={validateInputs}
             >
               Sign in
+            </Button>
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              onClick={loginAsGuest}
+            >
+              Sign in as Guest
             </Button>
             <Link
               component="button"
