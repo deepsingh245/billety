@@ -1,4 +1,4 @@
-import { GlobalUIService } from "./GlobalUIService";
+// import { GlobalUIService } from "./GlobalUIService";
 
 /**
  * Mock email service to send invoice to client.
