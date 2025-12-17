@@ -1,64 +1,78 @@
 # Billety
 
-Billety is a cross‑platform billing and invoicing system built with React, Electron, and Capacitor. It supports desktop (Windows/macOS/Linux) via Electron and mobile (Android) via Capacitor. Billety automatically generates and emails invoices to your clients.
+Billety is a modern, cross‑platform billing and invoicing system designed for seamless business management. Built with **React**, **Electron**, and **Capacitor**, it delivers a unified experience across desktop (Windows/macOS/Linux) and mobile (Android). Billety simplifies your workflow by automatically generating tailored invoices, managing client databases, and tracking business performance in real-time.
 
 ---
 
 ## 🚀 Features
 
-- **Cross‑Platform**
+### **Unified Cross-Platform Experience**
+- **Desktop**: Native-like performance on Windows, macOS, and Linux using Electron.
+- **Mobile**: Robust Android application powered by Capacitor for on-the-go management.
 
-  - Desktop app using Electron
-  - Android app via Capacitor
+### **Comprehensive Client Management**
+- **Database**: Maintain detailed profiles for all your clients.
+- **Tracking**: Keep tabs on contact details, receivables, and interaction history.
 
-- **Client Management**
+### **Advanced Invoice Operations**
+- **Flexible Creation**: Generate professional invoices with dynamic line items.
+- **Rate Customization**: Support for diverse billing models (e.g., rate per weight or per piece).
+- **Status Monitoring**: Visual indicators for Paid, Unpaid, and Partially Paid statuses.
 
-  - Add, edit, delete clients
-  - Store contact info and receivables
+### **Automated & Custom Delivery**
+- **Scheduling**: Set up automatic email delivery for invoices.
+- **Templates**: Design personalized email templates to match your brand identity.
 
-- **Invoice Management**
+### **Real-Time Synchronization**
+- **Cloud Sync**: Powered by Firestore to ensure your data is always up-to-date across all devices.
+- **Offline Capability**: Continue working on mobile even without an internet connection; changes sync automatically when online.
 
-  - Create, update, delete invoices
-  - Attach line‑item details (rate by weight or piece)
-  - Track statuses: Paid / Unpaid / Partially Paid
-
-- **Automatic Delivery**
-
-  - Scheduled invoice emailing
-  - Customizable email templates
-
-- **Real‑Time Sync**
-
-  - Firestore back‑end for real‑time data updates
-  - Offline support on mobile
-
-- **Theming & Localization**
-
-  - Light/Dark mode
-  - Pluggable language packs
+### **Personalization**
+- **Theming**: Toggle between elegant Light and Dark modes.
+- **Localization**: Adapt the interface with pluggable language packs.
 
 ---
 
 ## 🔄 Application Flow
 
-1. **Authentication**: Secure login via email/password.
-2. **Dashboard**: Immediate insight into business performance (Total Clients, Invoices, Items).
-3. **Data Management**:
-    - **Clients**: Create and manage a comprehensive database of clients.
-    - **Items**: Define products and services with specific rates (per kg/piece).
-4. **Invoice Creation**:
-    - Select a client from the database.
-    - Add items dynamically.
-    - Review totals and create the invoice.
-5. **Output**: Generate professional PDFs for billing.
+```mermaid
+graph TD
+    A[User Login] --> B{Authentication}
+    B -->|Success| C[Dashboard]
+    B -->|Failure| A
+    
+    C --> D[Data Management]
+    C --> E[Invoicing Process]
+    C --> F[Analytics]
+
+    subgraph Data Management
+    D --> D1[Manage Clients]
+    D --> D2[Manage Inventory Items]
+    end
+
+    subgraph Invoicing Process
+    E --> E1[Select Client]
+    E1 --> E2[Add Items to Invoice]
+    E2 --> E3[Review & Calculate Totals]
+    E3 --> E4[Generate PDF / Save Invoice]
+    end
+
+    subgraph Analytics
+    F --> F1[View Total Clients]
+    F --> F2[Track Revenue Trends]
+    F --> F3[Monitor Top Items]
+    end
+```
+
+---
 
 ## 🛠️ Services Provided
 
-- **Smart Invoicing**: Automated calculation of totals, taxes, and receivables.
-- **Client & Inventory Databases**: Centralized storage for all business entities.
-- **Real-Time Data**: Instant synchronization across all connected devices using **Firebase**.
-- **Global Context**: Efficient state management ensuring data consistency throughout the user session.
-- **Analytics**: Visual charts and statistics to track growth and user engagement.
+- **Smart Invoicing Engine**: Automated tax calculations, sub-totals, and grand totals to eliminate manual errors.
+- **Centralized Database**: A single source of truth for your Clients and Inventory items, accessible from anywhere.
+- **Real-Time Collaboration**: Instant data updates across your organization's devices using **Firebase**.
+- **Global Data Context**: Optimized application state management ensures smooth navigation and instant data availability without redundant loading.
+- **Business Intelligence**: Interactive charts and visual analytics to provide deep insights into your business growth and user engagement.
 
 ---
 
@@ -136,52 +150,15 @@ npx cap open android
 
 ---
 
-<!-- ## 📂 Project Structure
-
-```
-billety/
-├── android/                # Capacitor Android project
-├── electron/               # Electron main process
-├── public/                 # Static assets
-├── src/
-│   ├── components/         # Reusable React components
-│   ├── hooks/              # Custom React hooks
-│   ├── services/           # Firebase & email utilities
-│   ├── store/              # Zustand/Redux state management
-│   ├── styles/             # Tailwind & theming
-│   ├── App.tsx             # Entry point for React
-│   └── main.tsx            # Electron bootstrapper
-├── firebase.config.example.ts
-├── .env.example
-├── package.json
-└── README.md
-``` -->
-
----
-
 ## 🔒 Security & Permissions
 
 - **Desktop**
-
   - File‑system access for exports/imports
   - No elevated privileges required
 
 - **Mobile (Android)**
-
   - Network permission for Firestore & email delivery
   - File‑write permission for PDF exports
-
----
-
-## 🤝 Contributing
-
-1. Fork the repo
-2. Create a feature branch (`git checkout -b feat/awesome‐feature`)
-3. Commit your changes (`git commit -m "feat: add awesome feature"`)
-4. Push to your branch (`git push origin feat/awesome‐feature`)
-5. Open a Pull Request
-
-Please follow the [Conventional Commits](https://www.conventionalcommits.org/) style.
 
 ---
 
