@@ -11,8 +11,10 @@ import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import AddClientForm from "../../components/AddClientForm/AddClientForm";
 import { colorSchemes } from "../../shared/themePrimitives";
+import { APP_CONSTANTS } from "../../constants/app.constants";
 import { getAllDocuments } from "../../firebase/firebaseUtils";
 import { GlobalUIService } from "../../utils/GlobalUIService";
+import { handleError } from "../../utils/error.utils";
 
 const columns: GridColDef[] = [
   { field: "name", headerName: "Name", flex: 1.5, minWidth: 70 },
@@ -57,13 +59,13 @@ const Clients = () => {
     const fetchClients = async () => {
       GlobalUIService.setLoading(true);
       try {
-        const data = await getAllDocuments("clients");
+        const data = await getAllDocuments(APP_CONSTANTS.COLLECTIONS.CLIENTS);
         console.log("🚀 ~ fetchClients ~ data:", data);
         setClients(data);
         GlobalUIService.setLoading(false);
       } catch (error) {
         GlobalUIService.setLoading(false);
-        console.error("Error fetching clients:", error);
+        handleError(error, "Error fetching clients");
       }
     };
 

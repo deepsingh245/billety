@@ -12,14 +12,16 @@ import AssignmentRoundedIcon from '@mui/icons-material/AssignmentRounded';
 import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
 import InfoRoundedIcon from '@mui/icons-material/InfoRounded';
 import HelpRoundedIcon from '@mui/icons-material/HelpRounded';
-import {useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import React from 'react';
 
+import { ROUTES } from "../../constants/routes.constants";
+
 const mainListItems = [
-  { text: 'Home', icon: <HomeRoundedIcon />, path: 'home' },
-  { text: 'Clients', icon: <PeopleRoundedIcon />, path: 'clients' },
-  { text: 'Items', icon: <AnalyticsRoundedIcon />, path: 'items' },
-  { text: 'Invoices', icon: <AssignmentRoundedIcon />, path: 'invoices' },
+  { text: 'Home', icon: <HomeRoundedIcon />, path: ROUTES.DASHBOARD.HOME },
+  { text: 'Clients', icon: <PeopleRoundedIcon />, path: ROUTES.DASHBOARD.CLIENTS },
+  { text: 'Items', icon: <AnalyticsRoundedIcon />, path: ROUTES.DASHBOARD.ITEMS },
+  { text: 'Invoices', icon: <AssignmentRoundedIcon />, path: ROUTES.DASHBOARD.INVOICES.ROOT },
 ];
 
 const secondaryListItems = [
@@ -31,7 +33,7 @@ const secondaryListItems = [
 export default function MenuContent() {
   const navigate = useNavigate()
   const [selectedIndex, setSelectedIndex] = React.useState(0);
-  const onItemClick = (item: any, index: number)=>{
+  const onItemClick = (item: any, index: number) => {
     setSelectedIndex(index)
     navigate(item.path)
   }

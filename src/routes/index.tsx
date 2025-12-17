@@ -6,45 +6,45 @@ import Home from "../pages/Home/Home";
 import Invoices from "../pages/Invoices/Invoices";
 import Items from "../pages/Items/Items";
 import InvoiceDetail from "../pages/Invoices/InvoiceDetail";
+import { ROUTES } from "../constants/routes.constants";
 
 const Login = lazy(() => import("../pages/Login/Login"));
 
 export const routes = [
   {
-    path: "/login",
+    path: ROUTES.LOGIN,
     element: <Login disableCustomTheme={false} />,
   },
   {
-    path: "*",
-    element: <Navigate to="/login" replace />,
+    path: ROUTES.WILDCARD,
+    element: <Navigate to={ROUTES.LOGIN} replace />,
   },
   {
-    
-    path: "/dashboard",
+    path: ROUTES.DASHBOARD.ROOT,
     element: <DashboardLayout />,
     children: [
       {
-        path: "home",
+        path: ROUTES.DASHBOARD.HOME,
         element: <Home />,
       },
       {
-        path: "clients",
+        path: ROUTES.DASHBOARD.CLIENTS,
         element: <Clients />,
       },
       {
-        path: "items",
+        path: ROUTES.DASHBOARD.ITEMS,
         element: <Items />,
       },
       {
-        path: "invoices",
+        path: ROUTES.DASHBOARD.INVOICES.ROOT,
         element: <Invoices />,
       },
       {
-        path: "invoices/create",
+        path: ROUTES.DASHBOARD.INVOICES.CREATE,
         element: <Invoices />,
       },
       {
-        path: "invoices/:id",
+        path: ROUTES.DASHBOARD.INVOICES.DETAIL_PATH,
         element: <InvoiceDetail />,
       },
     ],

@@ -7,7 +7,8 @@ import { Button } from "@mui/material";
 import { getAllDocuments } from "../../firebase/firebaseUtils";
 import { useEffect, useState } from "react";
 import { GlobalUIService } from "../../utils/GlobalUIService";
-import { Collections } from "../../constants/collections.constants";
+import { APP_CONSTANTS } from "../../constants/app.constants";
+import { handleError } from "../../utils/error.utils";
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
@@ -51,17 +52,17 @@ const columns: GridColDef[] = [
 function Items() {
   const [items, setItems] = useState([]);
   const [open, setOpen] = useState(false);
-  
+
   const fetchItems = async () => {
     GlobalUIService.setLoading(true);
     try {
-      const data = await getAllDocuments(Collections.ITEMS);
+      const data = await getAllDocuments(APP_CONSTANTS.COLLECTIONS.ITEMS);
       console.log("🚀 ~ fetchItems ~ data:", data);
       setItems(data);
       GlobalUIService.setLoading(false);
     } catch (error) {
       GlobalUIService.setLoading(false);
-      console.error("Error fetching items:", error);
+      handleError(error, "Error fetching items");
     }
   };
 

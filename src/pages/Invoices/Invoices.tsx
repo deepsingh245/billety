@@ -2,9 +2,10 @@ import { Button, Grid, Stack, Typography } from "@mui/material";
 import { GridColDef } from "@mui/x-data-grid";
 import { useEffect, useState } from "react";
 import CustomizedDataGrid from "../../components/CustomizedDataGrid/CustomizedDataGrid";
-import { Collections } from "../../constants/collections.constants";
+import { APP_CONSTANTS } from "../../constants/app.constants";
 import { getAllDocuments } from "../../firebase/firebaseUtils";
 import { GlobalUIService } from "../../utils/GlobalUIService";
+import { handleError } from "../../utils/error.utils";
 import InvoiceDialog from "./InvoiceDialog";
 
 // const invoice = [
@@ -60,18 +61,16 @@ const Invoices = () => {
     setOpen(false);
   };
 
-  const handleStepComplete = (stepIndex: number, selectedItems: number[]) => {
-    console.log(`Step ${stepIndex} completed with items:`, selectedItems);
-  };
+
 
   useEffect(() => {
     const fetchInvoices = async () => {
       try {
-        const data = await getAllDocuments(Collections.INVOICES);
+        const data = await getAllDocuments(APP_CONSTANTS.COLLECTIONS.INVOICES);
         console.log("🚀 ~ fetchInvoices ~ data:", data);
         // setInvoices(data);
       } catch (error) {
-        console.error("Error fetching invoices:", error);
+        handleError(error, "Error fetching invoices");
       }
     };
 
@@ -103,7 +102,6 @@ const Invoices = () => {
         open={open}
         onClose={handleClose}
         title="Add Invoice"
-        onStepComplete={handleStepComplete}
       />
       <Grid container spacing={2} columns={12}>
         <Grid size={{ xs: 12, lg: 12 }}>

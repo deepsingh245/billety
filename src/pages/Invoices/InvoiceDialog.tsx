@@ -24,13 +24,16 @@ import {
 import { useState, useEffect } from "react";
 import { colorSchemes } from "../../shared/themePrimitives";
 import { getAllDocuments, createDocument } from "../../firebase/firebaseUtils";
-import { Collections } from "../../constants/collections.constants";
+import { APP_CONSTANTS } from "../../constants/app.constants";
+import { ROUTES } from "../../constants/routes.constants";
 import { Client } from "../../interfaces/client.interface";
 import { Item } from "../../interfaces/item.interface";
+import { InvoiceItem } from "../../interfaces/invoice.interface";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
 import { useNavigate } from "react-router-dom";
 import { GlobalUIService } from "../../utils/GlobalUIService";
+import { handleError } from "../../utils/error.utils";
 
 interface InvoiceDialogProps {
   open: boolean;
@@ -38,10 +41,7 @@ interface InvoiceDialogProps {
   title?: string;
 }
 
-interface InvoiceItem extends Item {
-  quantity: number;
-  rate: number;
-}
+
 
 export default function InvoiceDialog({
   open,
@@ -52,10 +52,10 @@ export default function InvoiceDialog({
   const [activeStep, setActiveStep] = useState(0);
   const [clients, setClients] = useState<Client[]>([]);
   const [items, setItems] = useState<Item[]>([]);
-  
+
   const [selectedClient, setSelectedClient] = useState<Client | null>(null);
   const [invoiceItems, setInvoiceItems] = useState<InvoiceItem[]>([]);
-  
+
   // Temporary state for adding a new item line
   const [currentItem, setCurrentItem] = useState<Item | null>(null);
   const [currentQuantity, setCurrentQuantity] = useState<number>(1);
@@ -70,13 +70,13 @@ export default function InvoiceDialog({
   const fetchData = async () => {
     try {
       const [clientsData, itemsData] = await Promise.all([
-        getAllDocuments(Collections.CLIENTS),
-        getAllDocuments(Collections.ITEMS),
+        getAllDocuments(APP_CONSTANTS.COLLECTIONS.CLIENTS),
+        getAllDocuments(APP_CONSTANTS.COLLECTIONS.ITEMS),
       ]);
       setClients(clientsData);
       setItems(itemsData);
     } catch (error) {
-      console.error("Error fetching data:", error);
+      handleError(error, "Error fetching data");
     }
   };
 
@@ -123,13 +123,13 @@ export default function InvoiceDialog({
         totalAmount: invoiceItems.reduce((sum, item) => sum + (item.quantity * item.rate), 0),
       };
 
-      const docRef = await createDocument(Collections.INVOICES, invoiceData);
+      const docRef = await createDocument(APP_CONSTANTS.COLLECTIONS.INVOICES, invoiceData);
       GlobalUIService.setLoading(false);
       onClose();
       // Navigate to the edit/view page
-      navigate(`/invoices/${docRef}`);
+      navigate(`${ROUTES.DASHBOARD.ROOT}/${APP_CONSTANTS.COLLECTIONS.INVOICES}/${docRef}`);
     } catch (error) {
-      console.error("Error creating invoice:", error);
+      handleError(error, "Error creating invoice");
       GlobalUIService.setLoading(false);
     }
   };

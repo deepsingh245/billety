@@ -3,6 +3,7 @@ import { routes } from "./routes";
 import "./App.css";
 import { HashRouter, useRoutes } from "react-router-dom";
 import { GlobalUIProvider } from "./context/globalUIContext";
+import { ErrorBoundary } from "./components/ErrorBoundary/ErrorBoundary";
 
 function RoutesWrapper() {
   const element = useRoutes(routes);
@@ -13,7 +14,9 @@ function App() {
   return (
     <HashRouter>
       <GlobalUIProvider>
-        <RoutesWrapper />
+        <ErrorBoundary>
+          <RoutesWrapper />
+        </ErrorBoundary>
       </GlobalUIProvider>
     </HashRouter>
   );

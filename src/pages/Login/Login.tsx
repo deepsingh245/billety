@@ -23,6 +23,8 @@ import InputAdornment from "@mui/material/InputAdornment";
 import IconButton from "@mui/material/IconButton";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import { ROUTES } from "../../constants/routes.constants";
+import { handleError } from "../../utils/error.utils";
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: "flex",
@@ -106,11 +108,10 @@ export default function Login(props: { disableCustomTheme?: boolean }) {
       const user = await loginUser(email, password);
       if (user) {
         console.log("🚀 ~ handleSubmit ~ user:", user);
-        navigate("/dashboard/home");
+        navigate(`${ROUTES.DASHBOARD.ROOT}/${ROUTES.DASHBOARD.HOME}`);
       }
     } catch (error) {
-      console.error("Login failed:", error);
-      // Optionally show a user-facing error message here
+      handleError(error, "Login failed");
     }
   };
 
@@ -145,10 +146,10 @@ export default function Login(props: { disableCustomTheme?: boolean }) {
     try {
       const user = await loginUser("guest@billety.com", "guest@123");
       if (user) {
-        navigate("/dashboard/home");
+        navigate(`${ROUTES.DASHBOARD.ROOT}/${ROUTES.DASHBOARD.HOME}`);
       }
     } catch (error) {
-      console.error("Login failed:", error);
+      handleError(error, "Guest login failed");
     }
   };
 
