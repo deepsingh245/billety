@@ -265,26 +265,19 @@ export default function Login(props: { disableCustomTheme?: boolean }) {
           <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
             <Button
               fullWidth
+              disabled
               variant="outlined"
               onClick={() => alert("Sign in with Google")}
               startIcon={<GoogleIcon />}
             >
               Sign in with Google
             </Button>
-            <Button
-              fullWidth
-              variant="outlined"
-              onClick={() => alert("Sign in with Facebook")}
-              startIcon={<FacebookIcon />}
-            >
-              Sign in with Facebook
-            </Button>
             <Typography sx={{ textAlign: "center" }}>
               Don&apos;t have an account?{" "}
               <Link
-                href="/material-ui/getting-started/templates/sign-in/"
+                onClick={() => navigate(ROUTES.SIGNUP)}
                 variant="body2"
-                sx={{ alignSelf: "center" }}
+                sx={{ alignSelf: "center", cursor: "pointer" }}
               >
                 Sign up
               </Link>

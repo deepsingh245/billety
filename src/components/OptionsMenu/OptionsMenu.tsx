@@ -13,6 +13,7 @@ import MenuButton from '../MenuButton/MenuButton';
 import { useNavigate } from 'react-router-dom';
 import React from 'react';
 import { logoutUser } from '../../firebase/auth';
+import { ROUTES } from '../../constants/routes.constants';
 
 const MenuItem = styled(MuiMenuItem)({
   margin: '2px 0',
@@ -66,14 +67,14 @@ export default function OptionsMenu() {
           },
         }}
       >
-        <MenuItem onClick={handleClose}>Profile</MenuItem>
+        <MenuItem onClick={() => navigate(ROUTES.DASHBOARD.PROFILE)}>Profile</MenuItem>
         <MenuItem onClick={handleClose}>My account</MenuItem>
         <Divider />
-        <MenuItem onClick={handleClose}>Add another account</MenuItem>
-        <MenuItem onClick={handleClose}>Settings</MenuItem>
+        {/* <MenuItem onClick={handleClose}>Add another account</MenuItem> */}
+        {/* <MenuItem onClick={handleClose}>Settings</MenuItem> */}
         <Divider />
-        <MenuItem
-          onClick={handleClose}
+        {/* <MenuItem
+          // onClick={handleClose}
           sx={{
             [`& .${listItemIconClasses.root}`]: {
               ml: 'auto',
@@ -85,7 +86,7 @@ export default function OptionsMenu() {
           <ListItemIcon>
             <LogoutRoundedIcon fontSize="small" />
           </ListItemIcon>
-        </MenuItem>
+        </MenuItem> */}
       </Menu>
     </React.Fragment>
   );

@@ -4,6 +4,7 @@ import "./App.css";
 import { HashRouter, useRoutes } from "react-router-dom";
 import { GlobalUIProvider } from "./context/globalUIContext";
 import { DataProvider } from "./context/dataContext";
+import { AuthProvider } from "./context/AuthContext";
 import { ErrorBoundary } from "./components/ErrorBoundary/ErrorBoundary";
 
 function RoutesWrapper() {
@@ -16,9 +17,11 @@ function App() {
     <HashRouter>
       <GlobalUIProvider>
         <ErrorBoundary>
-          <DataProvider>
-            <RoutesWrapper />
-          </DataProvider>
+          <AuthProvider>
+            <DataProvider>
+              <RoutesWrapper />
+            </DataProvider>
+          </AuthProvider>
         </ErrorBoundary>
       </GlobalUIProvider>
     </HashRouter>

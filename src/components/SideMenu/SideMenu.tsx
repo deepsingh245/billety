@@ -9,6 +9,9 @@ import Typography from '@mui/material/Typography';
 import SelectContent from '../SelectContent/SelectContent';
 import MenuContent from '../MenuContent/MenuContent';
 import OptionsMenu from '../OptionsMenu/OptionsMenu';
+import { useState, useEffect } from 'react';
+import { useAuth } from '../../context/AuthContext';
+
 
 const drawerWidth = 240;
 
@@ -24,6 +27,13 @@ const Drawer = styled(MuiDrawer)({
 });
 
 export default function SideMenu() {
+  const [user, setUser] = useState(null);
+  const auth = useAuth();
+
+  useEffect(() => {
+    setUser(auth.user);
+  }, [auth.user]);
+
   return (
     <Drawer
       variant="permanent"
@@ -69,18 +79,18 @@ export default function SideMenu() {
         <Avatar
           sizes="small"
           alt="Riley Carter"
-          src="/static/images/avatar/7.jpg"
+          src={user?.avatar}
           sx={{ width: 36, height: 36 }}
         />
         <Box sx={{ mr: 'auto' }}>
           <Typography variant="body2" sx={{ fontWeight: 500, lineHeight: '16px' }}>
-            Deep Singh
+            {user?.name}
           </Typography>
           <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-            deep@email.com
+            {user?.email}
           </Typography>
         </Box>
-        <OptionsMenu />
+        {/* <OptionsMenu /> */}
       </Stack>
     </Drawer>
   );

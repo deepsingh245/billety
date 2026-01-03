@@ -67,7 +67,7 @@ export default function MainGrid() {
         <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
           <StatCard
             title="Revenue (Est)"
-            value={`$${invoices.reduce((acc, curr) => acc + (curr.totalAmount || 0), 0).toFixed(0)}`}
+            value={`₹${invoices.reduce((acc, curr) => acc + (curr.totalAmount || 0), 0).toFixed(0)}`}
             interval="All time"
             trend="neutral"
             data={invoiceTrendData.length > 0 ? invoiceTrendData : [0]}

@@ -10,8 +10,6 @@ import AnalyticsRoundedIcon from '@mui/icons-material/AnalyticsRounded';
 import PeopleRoundedIcon from '@mui/icons-material/PeopleRounded';
 import AssignmentRoundedIcon from '@mui/icons-material/AssignmentRounded';
 import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded';
-import InfoRoundedIcon from '@mui/icons-material/InfoRounded';
-import HelpRoundedIcon from '@mui/icons-material/HelpRounded';
 import { useNavigate } from 'react-router-dom';
 import React from 'react';
 
@@ -25,9 +23,9 @@ const mainListItems = [
 ];
 
 const secondaryListItems = [
-  { text: 'Settings', icon: <SettingsRoundedIcon /> },
-  { text: 'About', icon: <InfoRoundedIcon /> },
-  { text: 'Feedback', icon: <HelpRoundedIcon /> },
+  { text: 'Settings', icon: <SettingsRoundedIcon />, path: ROUTES.DASHBOARD.SETTINGS },
+  { text: 'Profile', icon: <AssignmentRoundedIcon />, path: ROUTES.DASHBOARD.PROFILE },
+  { text: 'Logout', icon: <SettingsRoundedIcon /> },
 ];
 
 export default function MenuContent() {
@@ -53,7 +51,7 @@ export default function MenuContent() {
       <List dense>
         {secondaryListItems.map((item, index) => (
           <ListItem key={index} disablePadding sx={{ display: 'block' }}>
-            <ListItemButton>
+            <ListItemButton onClick={() => navigate(item.path)}>
               <ListItemIcon>{item.icon}</ListItemIcon>
               <ListItemText primary={item.text} />
             </ListItemButton>

@@ -7,21 +7,44 @@ import Invoices from "../pages/Invoices/Invoices";
 import Items from "../pages/Items/Items";
 import InvoiceDetail from "../pages/Invoices/InvoiceDetail";
 import { ROUTES } from "../constants/routes.constants";
+import { AuthGuard } from "../context/AuthGuard";
+import { GuestGuard } from "../context/GuestGuard";
+
 
 const Login = lazy(() => import("../pages/Login/Login"));
+const Signup = lazy(() => import("../pages/Signup/Signup"));
+const Profile = lazy(() => import("../pages/Profile/Profile"));
+const Settings = lazy(() => import("../pages/Settings/Settings"));
 
 export const routes = [
   {
     path: ROUTES.LOGIN,
-    element: <Login disableCustomTheme={false} />,
+    element: (
+      <GuestGuard>
+        <Login disableCustomTheme={false} />
+      </GuestGuard>
+    ),
   },
+  {
+    path: ROUTES.SIGNUP,
+    element: (
+      <GuestGuard>
+        <Signup disableCustomTheme={false} />
+      </GuestGuard>
+    ),
+  },
+
   {
     path: ROUTES.WILDCARD,
     element: <Navigate to={ROUTES.LOGIN} replace />,
   },
   {
     path: ROUTES.DASHBOARD.ROOT,
-    element: <DashboardLayout />,
+    element: (
+      <AuthGuard>
+        <DashboardLayout />
+      </AuthGuard>
+    ),
     children: [
       {
         path: ROUTES.DASHBOARD.HOME,
@@ -46,6 +69,14 @@ export const routes = [
       {
         path: ROUTES.DASHBOARD.INVOICES.DETAIL_PATH,
         element: <InvoiceDetail />,
+      },
+      {
+        path: ROUTES.DASHBOARD.PROFILE,
+        element: <Profile />,
+      },
+      {
+        path: ROUTES.DASHBOARD.SETTINGS,
+        element: <Settings />,
       },
     ],
   },

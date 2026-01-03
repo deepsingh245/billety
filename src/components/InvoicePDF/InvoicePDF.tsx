@@ -77,17 +77,17 @@ export default function InvoicePDF({ invoice }: InvoicePDFProps) {
         <Box sx={{ width: '250px' }}>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
             <Typography variant="body2">Subtotal:</Typography>
-            <Typography variant="body2">${invoice.totalAmount.toFixed(2)}</Typography>
+            <Typography variant="body2">₹{invoice.totalAmount.toFixed(2)}</Typography>
           </Box>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
             <Typography variant="body2">Tax (0%):</Typography>
-            <Typography variant="body2">$0.00</Typography>
+            <Typography variant="body2">₹0.00</Typography>
           </Box>
           <Divider sx={{ my: 1 }} />
           <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
             <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>Total:</Typography>
             <Typography variant="subtitle1" sx={{ fontWeight: 'bold', color: '#1976d2' }}>
-              ${invoice.totalAmount.toFixed(2)}
+              ₹{invoice.totalAmount.toFixed(2)}
             </Typography>
           </Box>
         </Box>

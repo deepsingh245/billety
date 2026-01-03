@@ -28,6 +28,7 @@ type GlobalUIContextType = {
     onConfirm?: () => void
   ) => void;
   showToast: (message: string) => void;
+  setLoading: (loading: boolean) => void;
 };
 
 const GlobalUIContext = createContext<GlobalUIContextType | null>(null);
@@ -121,7 +122,7 @@ export const GlobalUIProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <GlobalUIContext.Provider
-      value={{ openModal, openAlert, openPrompt, openDialog, showToast }}
+      value={{ openModal, openAlert, openPrompt, openDialog, showToast, setLoading }}
     >
       {children}
 
