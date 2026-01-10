@@ -14,6 +14,7 @@ import {
   QueryConstraint,
   DocumentReference,
   UpdateData,
+  writeBatch,
 } from "firebase/firestore";
 import { db } from "./firebase.config";
 
@@ -135,5 +136,32 @@ export function listenToCollection<T>(
   } catch (error) {
     console.error("Error setting up listener:", error);
     return () => { };
+  }
+}
+
+
+/**
+ * Efficiently deletes multiple documents in batches of 500.
+ */
+export async function deleteDocumentsBatch(
+  collectionPath: string,
+  docIds: string[]
+): Promise<void> {
+  const BATCH_SIZE = 500;
+  try {
+    for (let i = 0; i < docIds.length; i += BATCH_SIZE) {
+      const batch = writeBatch(db);
+      const chunk = docIds.slice(i, i + BATCH_SIZE);
+
+      chunk.forEach((id) => {
+        const ref = doc(db, collectionPath, id);
+        batch.delete(ref);
+      });
+
+      await batch.commit();
+    }
+  } catch (error) {
+    console.error("Error deleting documents batch:", error);
+    throw error;
   }
 }

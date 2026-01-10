@@ -77,9 +77,10 @@ const Invoices = () => {
       minWidth: 100,
       renderCell: (params) => {
         return (
-          <Stack direction="row" spacing={1}>
+          <Stack direction="row" spacing={1} sx={{ border: 'none' }}>
             <Button
-              variant="outlined"
+              variant="text"
+              sx={{ '&:hover': { backgroundColor: 'transparent' } }}
               onClick={() => navigate(`/dashboard/invoices/${params.row.id}`)}
             >
               <RemoveRedEyeIcon />

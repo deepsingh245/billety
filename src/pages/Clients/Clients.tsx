@@ -13,6 +13,10 @@ import AddClientForm from "../../components/AddClientForm/AddClientForm";
 import { colorSchemes } from "../../shared/themePrimitives";
 import { GlobalUIService } from "../../utils/GlobalUIService";
 import { useData } from "../../context/dataContext";
+import DeleteIcon from '@mui/icons-material/Delete';
+import { deleteDocument, deleteDocumentsBatch } from "../../firebase/firebaseUtils";
+import { COLLECTIONS } from "../../constants/collections.constants";
+import CustomizedTreeView from "../../components/CustomizedTreeView/CustomizedTreeView";
 
 const columns: GridColDef[] = [
   { field: "name", headerName: "Name", flex: 1.5, minWidth: 70 },
@@ -45,6 +49,7 @@ const columns: GridColDef[] = [
 const Clients = () => {
   const { clients, loading, refreshData } = useData();
   const [open, setOpen] = React.useState(false);
+  const [selectedInvoices, setSelectedInvoices] = React.useState<any[]>([]);
 
   useEffect(() => {
     GlobalUIService.setLoading(loading);
@@ -58,6 +63,21 @@ const Clients = () => {
     setOpen(false);
   };
 
+  const handleDelete = async (ids: string[]) => {
+    GlobalUIService.setLoading(true);
+    try {
+      if (ids.length === 1) {
+        await deleteDocument(COLLECTIONS.CLIENTS, ids[0]);
+      } else if (ids.length > 1) {
+        await deleteDocumentsBatch(COLLECTIONS.CLIENTS, ids);
+      }
+    } catch (error) {
+      console.error("Error deleting clients:", error);
+    } finally {
+      refreshData();
+      GlobalUIService.setLoading(false);
+    }
+  };
   return (
     <Stack width={"100%"}>
       <Stack
@@ -71,13 +91,22 @@ const Clients = () => {
         <Typography component="h2" variant="h6" sx={{ mb: 2 }}>
           Details
         </Typography>
-        <Button
-          variant="outlined"
-          onClick={handleClickOpen}
-          sx={{ width: "fit-content" }}
-        >
-          Add Client
-        </Button>
+        <Stack direction={"row"} spacing={2}>
+          <Button
+            variant="outlined"
+            onClick={handleClickOpen}
+            sx={{ width: "fit-content" }}
+          >
+            Add Client
+          </Button>
+          <Button
+            variant="text"
+            sx={{ width: "fit-content", padding: 0 }}
+            onClick={() => handleDelete(selectedInvoices.map((invoice) => invoice.id))}
+          >
+            <DeleteIcon sx={{ color: "red" }} />
+          </Button>
+        </Stack>
       </Stack>
       <Dialog
         open={open}
@@ -103,8 +132,16 @@ const Clients = () => {
         </DialogContent>
       </Dialog>
       <Grid container spacing={2} columns={12}>
-        <Grid size={{ xs: 12, lg: 12 }}>
-          <CustomizedDataGrid columns={columns} rows={clients} />
+        <Grid size={{ xs: 12, lg: 9 }}>
+          <CustomizedDataGrid
+            columns={columns}
+            rows={clients}
+            checkboxSelection
+            onRowSelectionModelChange={(ids: any) => {
+              const selectedRows = clients.filter((row) => ids.includes(row.id));
+              setSelectedInvoices(selectedRows);
+            }}
+          />
         </Grid>
         <Grid size={{ xs: 12, lg: 3 }}>
           <Stack gap={2} direction={{ xs: "column", sm: "row", lg: "column" }}>

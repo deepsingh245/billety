@@ -12,7 +12,7 @@ import {
 import { Item } from "../../interfaces/item.interface";
 import { createDocument } from "../../firebase/firebaseUtils";
 import { GlobalUIService } from "../../utils/GlobalUIService";
-import { Collections } from "../../constants/collections.constants";
+import { COLLECTIONS } from "../../constants/collections.constants";
 
 interface AddItemFormProps {
   onSuccess?: () => void;
@@ -28,7 +28,7 @@ export default function AddItemForm({ onSuccess }: AddItemFormProps) {
   const onSubmit = async (data: Item) => {
     GlobalUIService.setLoading(true);
     try {
-      await createDocument(Collections.ITEMS, data);
+      await createDocument(COLLECTIONS.ITEMS, data);
       GlobalUIService.setLoading(false);
       if (onSuccess) onSuccess();
     } catch (error) {
