@@ -12,3 +12,33 @@ export const APP_CONSTANTS = {
         DELETE_CONFIRM: "Are you sure you want to delete this?",
     },
 };
+
+export const ChipVariant = {
+    PAID: "Paid",
+    UNPAID: "Unpaid",
+    PENDING: "Pending",
+    DRAFT: "Draft",
+}
+
+export const CHIP_VARIANT = {
+    [ChipVariant.PAID]: {
+        backgroundColor: "rgba(0, 128, 0, 0.1)",
+        color: "green",
+        borderColor: "green",
+    },
+    [ChipVariant.UNPAID]: {
+        backgroundColor: "rgba(255, 0, 0, 0.1)",
+        color: "red",
+        borderColor: "red",
+    },
+    [ChipVariant.PENDING]: {
+        backgroundColor: "rgba(255, 165, 0, 0.1)",
+        color: "orange",
+        borderColor: "orange",
+    },
+    [ChipVariant.DRAFT]: {
+        backgroundColor: "rgba(255, 165, 0, 0.1)",
+        color: "orange",
+        borderColor: "orange",
+    },
+};

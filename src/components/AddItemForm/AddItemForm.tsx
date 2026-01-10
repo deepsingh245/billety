@@ -12,7 +12,7 @@ import {
 import { Item } from "../../interfaces/item.interface";
 import { createDocument } from "../../firebase/firebaseUtils";
 import { GlobalUIService } from "../../utils/GlobalUIService";
-import { COLLECTIONS } from "../../constants/collections.constants";
+import { APP_CONSTANTS } from "../../constants/app.constants";
 
 interface AddItemFormProps {
   onSuccess?: () => void;
@@ -28,7 +28,7 @@ export default function AddItemForm({ onSuccess }: AddItemFormProps) {
   const onSubmit = async (data: Item) => {
     GlobalUIService.setLoading(true);
     try {
-      await createDocument(COLLECTIONS.ITEMS, data);
+      await createDocument(APP_CONSTANTS.COLLECTIONS.ITEMS, data);
       GlobalUIService.setLoading(false);
       if (onSuccess) onSuccess();
     } catch (error) {
@@ -42,11 +42,12 @@ export default function AddItemForm({ onSuccess }: AddItemFormProps) {
       <Grid container spacing={3}>
         <Grid size={{ xs: 12, md: 6 }}>
           <FormControl fullWidth error={!!errors.name}>
-            <FormLabel required>Name</FormLabel>
+            <FormLabel required sx={{ color: 'text.secondary', mb: 1 }}>Name</FormLabel>
             <OutlinedInput
               size="small"
               placeholder="Item Name"
               {...register("name", { required: "Name is required" })}
+              sx={{ bgcolor: 'background.paper' }}
             />
             {errors.name && (
               <FormHelperText>{errors.name.message}</FormHelperText>
@@ -56,11 +57,12 @@ export default function AddItemForm({ onSuccess }: AddItemFormProps) {
 
         <Grid size={{ xs: 12, md: 6 }}>
           <FormControl fullWidth error={!!errors.category}>
-            <FormLabel required>Category</FormLabel>
+            <FormLabel required sx={{ color: 'text.secondary', mb: 1 }}>Category</FormLabel>
             <OutlinedInput
               size="small"
               placeholder="Category"
               {...register("category", { required: "Category is required" })}
+              sx={{ bgcolor: 'background.paper' }}
             />
             {errors.category && (
               <FormHelperText>{errors.category.message}</FormHelperText>
@@ -70,7 +72,7 @@ export default function AddItemForm({ onSuccess }: AddItemFormProps) {
 
         <Grid size={{ xs: 12, md: 4 }}>
           <FormControl fullWidth error={!!errors.ratePerKg}>
-            <FormLabel required>Rate/Kg</FormLabel>
+            <FormLabel required sx={{ color: 'text.secondary', mb: 1 }}>Rate/Kg</FormLabel>
             <OutlinedInput
               size="small"
               type="number"
@@ -79,6 +81,7 @@ export default function AddItemForm({ onSuccess }: AddItemFormProps) {
                 required: "Rate per Kg is required",
                 valueAsNumber: true,
               })}
+              sx={{ bgcolor: 'background.paper' }}
             />
             {errors.ratePerKg && (
               <FormHelperText>{errors.ratePerKg.message}</FormHelperText>
@@ -88,7 +91,7 @@ export default function AddItemForm({ onSuccess }: AddItemFormProps) {
 
         <Grid size={{ xs: 12, md: 4 }}>
           <FormControl fullWidth error={!!errors.ratePerPiece}>
-            <FormLabel required>Rate/Piece</FormLabel>
+            <FormLabel required sx={{ color: 'text.secondary', mb: 1 }}>Rate/Piece</FormLabel>
             <OutlinedInput
               size="small"
               type="number"
@@ -97,6 +100,7 @@ export default function AddItemForm({ onSuccess }: AddItemFormProps) {
                 required: "Rate per Piece is required",
                 valueAsNumber: true,
               })}
+              sx={{ bgcolor: 'background.paper' }}
             />
             {errors.ratePerPiece && (
               <FormHelperText>{errors.ratePerPiece.message}</FormHelperText>
@@ -106,11 +110,12 @@ export default function AddItemForm({ onSuccess }: AddItemFormProps) {
 
         <Grid size={{ xs: 12, md: 4 }}>
           <FormControl fullWidth error={!!errors.unit}>
-            <FormLabel required>Unit</FormLabel>
+            <FormLabel required sx={{ color: 'text.secondary', mb: 1 }}>Unit</FormLabel>
             <Select
               size="small"
               defaultValue=""
               {...register("unit", { required: "Unit is required" })}
+              sx={{ bgcolor: 'background.paper' }}
             >
               <MenuItem value="kg">Kg</MenuItem>
               <MenuItem value="piece">Piece</MenuItem>
@@ -124,12 +129,13 @@ export default function AddItemForm({ onSuccess }: AddItemFormProps) {
 
         <Grid size={{ xs: 12 }}>
           <FormControl fullWidth error={!!errors.description}>
-            <FormLabel>Description</FormLabel>
+            <FormLabel sx={{ color: 'text.secondary', mb: 1 }}>Description</FormLabel>
             <OutlinedInput
               size="small"
               multiline
               placeholder="Item Description"
               {...register("description")}
+              sx={{ bgcolor: 'background.paper' }}
             />
             {errors.description && (
               <FormHelperText>{errors.description.message}</FormHelperText>
@@ -138,7 +144,7 @@ export default function AddItemForm({ onSuccess }: AddItemFormProps) {
         </Grid>
 
         <Grid size={{ xs: 12 }}>
-          <Button type="submit" variant="contained" color="primary">
+          <Button type="submit" variant="contained" color="primary" sx={{ color: 'white' }}>
             Submit Item
           </Button>
         </Grid>

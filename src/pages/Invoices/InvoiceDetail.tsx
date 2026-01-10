@@ -9,13 +9,14 @@ import {
   Button,
   IconButton,
   Stack,
-  Autocomplete,
+  // Autocomplete,
   Divider,
   Tabs,
   Tab,
   useMediaQuery,
   useTheme,
 } from "@mui/material";
+import { CustomAutocomplete } from "../../components/CustomAutocomplete/CustomAutocomplete";
 import { GlobalUIService } from "../../utils/GlobalUIService";
 import { getDocument, updateDocument, getAllDocuments } from "../../firebase/firebaseUtils";
 import { APP_CONSTANTS } from "../../constants/app.constants";
@@ -179,35 +180,52 @@ export default function InvoiceDetail() {
 
       <Box sx={{ mb: 4 }}>
         <Typography variant="subtitle2" gutterBottom>Client Details</Typography>
-        <Autocomplete
+        <CustomAutocomplete
           options={clients}
-          getOptionLabel={(option) => option.name || ""}
+          getOptionLabel={(option: Client) => option.name || ""}
           value={invoice.client}
           // isOptionEqualToValue={(option, value) => option?.id === value?.id}
-          onChange={(_, newValue) => handleClientChange(newValue)}
-          renderInput={(params) => <TextField {...params} size="small" fullWidth label="Select Client" />}
+          onChange={(newValue) => handleClientChange(newValue)}
+          label="Select Client"
+          renderOptionContent={(option: Client) => (
+            <Box>
+              <Typography variant="body1">{option.name}</Typography>
+            </Box>
+          )}
         />
       </Box>
 
       <Box sx={{ mb: 3, p: 2, bgcolor: 'background.default', borderRadius: 1 }}>
         <Typography variant="subtitle2" gutterBottom>Add Item</Typography>
         <Stack spacing={2}>
-          <Autocomplete
+          <CustomAutocomplete
             options={categories}
             value={selectedCategory}
-            onChange={(_, newValue) => {
+            onChange={(newValue) => {
               setSelectedCategory(newValue);
               setSelectedItem(null);
             }}
-            renderInput={(params) => <TextField {...params} size="small" label="Category" />}
+            getOptionLabel={(option: string) => option}
+            label="Category"
+            renderOptionContent={(option: string) => (
+              <Box>
+                <Typography variant="body1">{option}</Typography>
+              </Box>
+            )}
           />
-          <Autocomplete
+          <CustomAutocomplete
             options={filteredItems}
-            getOptionLabel={(option) => option.name}
+            getOptionLabel={(option: Item) => option.name}
             value={selectedItem}
-            onChange={(_, newValue) => setSelectedItem(newValue)}
-            disabled={!selectedCategory}
-            renderInput={(params) => <TextField {...params} size="small" label="Item" />}
+            onChange={(newValue) => setSelectedItem(newValue)}
+            // disabled={!selectedCategory} // CustomAutocomplete might not support disabled prop yet unless added
+            label="Item"
+            renderOptionContent={(option: Item) => (
+              <Box>
+                <Typography variant="body1">{option.name}</Typography>
+              </Box>
+            )}
+            sx={!selectedCategory ? { pointerEvents: 'none', opacity: 0.6 } : {}}
           />
           <Button
             variant="contained"
@@ -215,6 +233,7 @@ export default function InvoiceDetail() {
             startIcon={<AddIcon />}
             onClick={handleAddItem}
             disabled={!selectedItem}
+            sx={{ color: `${!selectedItem ? 'gray !important' : 'theme.palette.text.primary !important'}` }}
           >
             Add Item
           </Button>

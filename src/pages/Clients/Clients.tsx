@@ -15,8 +15,8 @@ import { GlobalUIService } from "../../utils/GlobalUIService";
 import { useData } from "../../context/dataContext";
 import DeleteIcon from '@mui/icons-material/Delete';
 import { deleteDocument, deleteDocumentsBatch } from "../../firebase/firebaseUtils";
-import { COLLECTIONS } from "../../constants/collections.constants";
-import CustomizedTreeView from "../../components/CustomizedTreeView/CustomizedTreeView";
+import { APP_CONSTANTS } from "../../constants/app.constants";
+// import CustomizedTreeView from "../../components/CustomizedTreeView/CustomizedTreeView";
 
 const columns: GridColDef[] = [
   { field: "name", headerName: "Name", flex: 1.5, minWidth: 70 },
@@ -46,10 +46,13 @@ const columns: GridColDef[] = [
   },
 ];
 
+import ConfirmationDialog from "../../components/ConfirmationDialog/ConfirmationDialog";
+
 const Clients = () => {
   const { clients, loading, refreshData } = useData();
   const [open, setOpen] = React.useState(false);
-  const [selectedInvoices, setSelectedInvoices] = React.useState<any[]>([]);
+  const [confirmOpen, setConfirmOpen] = React.useState(false);
+  const [selectedClients, setSelectedClients] = React.useState<any[]>([]);
 
   useEffect(() => {
     GlobalUIService.setLoading(loading);
@@ -63,21 +66,25 @@ const Clients = () => {
     setOpen(false);
   };
 
-  const handleDelete = async (ids: string[]) => {
+  const handleDelete = async () => {
+    setConfirmOpen(false);
     GlobalUIService.setLoading(true);
+    const ids = selectedClients;
     try {
       if (ids.length === 1) {
-        await deleteDocument(COLLECTIONS.CLIENTS, ids[0]);
+        await deleteDocument(APP_CONSTANTS.COLLECTIONS.CLIENTS, ids[0]);
       } else if (ids.length > 1) {
-        await deleteDocumentsBatch(COLLECTIONS.CLIENTS, ids);
+        await deleteDocumentsBatch(APP_CONSTANTS.COLLECTIONS.CLIENTS, ids);
       }
     } catch (error) {
       console.error("Error deleting clients:", error);
     } finally {
       refreshData();
       GlobalUIService.setLoading(false);
+      setSelectedClients([]);
     }
   };
+
   return (
     <Stack width={"100%"}>
       <Stack
@@ -99,47 +106,64 @@ const Clients = () => {
           >
             Add Client
           </Button>
-          <Button
-            variant="text"
-            sx={{ width: "fit-content", padding: 0 }}
-            onClick={() => handleDelete(selectedInvoices.map((invoice) => invoice.id))}
-          >
-            <DeleteIcon sx={{ color: "red" }} />
-          </Button>
+          {selectedClients.length > 0 && (
+            <Button
+              variant="outlined"
+              sx={{ width: "fit-content", minWidth: "auto", padding: '5px' }}
+              onClick={() => setConfirmOpen(true)}
+            >
+              <DeleteIcon sx={{ color: "red" }} />
+            </Button>
+          )}
         </Stack>
       </Stack>
+      <ConfirmationDialog
+        open={confirmOpen}
+        title="Delete Clients"
+        content={`Are you sure you want to delete ${selectedClients.length} client(s)? This action cannot be undone.`}
+        onConfirm={handleDelete}
+        onClose={() => setConfirmOpen(false)}
+        confirmText="Delete"
+      />
       <Dialog
         open={open}
         onClose={handleClose}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
+        PaperProps={{
+          sx: {
+            backgroundColor: 'background.paper',
+            backgroundImage: 'none',
+          }
+        }}
       >
         <DialogTitle
           id="alert-dialog-title"
-          sx={{ backgroundColor: colorSchemes.dark.palette.background.paper }}
+          sx={{ color: 'text.primary' }}
         >
           {"Add Client"}
         </DialogTitle>
-        <DialogContent
-          sx={{ backgroundColor: colorSchemes.dark.palette.background.paper }}
-        >
+        <DialogContent sx={{ color: 'text.secondary' }}>
           <Box sx={{ width: "100%" }}>
-            <AddClientForm onSuccess={() => {
-              handleClose();
-              refreshData();
-            }} />
+            <AddClientForm
+              onSuccess={() => {
+                handleClose();
+                refreshData();
+              }}
+              onCancel={() => handleClose()}
+            />
           </Box>
         </DialogContent>
       </Dialog>
       <Grid container spacing={2} columns={12}>
-        <Grid size={{ xs: 12, lg: 9 }}>
+        <Grid size={{ xs: 12, lg: 12 }}>
           <CustomizedDataGrid
             columns={columns}
             rows={clients}
             checkboxSelection
-            onRowSelectionModelChange={(ids: any) => {
-              const selectedRows = clients.filter((row) => ids.includes(row.id));
-              setSelectedInvoices(selectedRows);
+            onRowSelectionModelChange={({ ids }: any) => {
+              const clientIds = Array.from(ids);
+              setSelectedClients(clientIds);
             }}
           />
         </Grid>

@@ -5,10 +5,8 @@ import {
   DialogContent,
   DialogTitle,
   Step,
-  StepContent,
   StepLabel,
   Stepper,
-  Autocomplete,
   TextField,
   Typography,
   Stack,
@@ -27,7 +25,6 @@ import {
   useTheme,
 } from "@mui/material";
 import { useState, useEffect } from "react";
-import { colorSchemes } from "../../shared/themePrimitives";
 import { getAllDocuments, createDocument } from "../../firebase/firebaseUtils";
 import { APP_CONSTANTS } from "../../constants/app.constants";
 import { ROUTES } from "../../constants/routes.constants";
@@ -46,7 +43,9 @@ import CloseIcon from "@mui/icons-material/Close";
 import { useNavigate } from "react-router-dom";
 import { GlobalUIService } from "../../utils/GlobalUIService";
 import { handleError } from "../../utils/error.utils";
+import { CustomAutocomplete } from "../../components/CustomAutocomplete/CustomAutocomplete";
 import { useData } from "../../context/dataContext";
+import { colorSchemes } from "../../shared/themePrimitives";
 
 interface InvoiceDialogProps {
   open: boolean;
@@ -224,7 +223,7 @@ export default function InvoiceDialog({
             display: { xs: 'none', md: 'block' },
             bgcolor: contentBg
           }}>
-            <Stepper activeStep={activeStep} orientation="vertical">
+            <Stepper activeStep={activeStep} orientation="vertical" connector={<span style={{ backgroundColor: borderColor, height: 50, width: '2px', marginLeft: '10px' }} />}>
               <Step>
                 <StepLabel
                   StepIconComponent={(props) => (
@@ -292,38 +291,29 @@ export default function InvoiceDialog({
                   Who is this invoice for?
                 </Typography>
 
-                <Autocomplete
+                <CustomAutocomplete
                   options={clients}
-                  getOptionLabel={(option) => option.name || ""}
                   value={selectedClient}
-                  onChange={(_, newValue) => setSelectedClient(newValue)}
-                  renderInput={(params) => (
-                    <TextField
-                      {...params}
-                      label="Search Client"
-                      placeholder="Type client name..."
-                      variant="outlined"
-                      fullWidth
-                      InputProps={{
-                        ...params.InputProps,
-                        sx: { borderRadius: 2, p: 1 }
-                      }}
-                    />
-                  )}
-                  renderOption={(props, option) => (
-                    <Box component="li" {...props} sx={{ '& > img': { mr: 2, flexShrink: 0 } }}>
-                      <Box>
-                        <Typography variant="body1" fontWeight="500">{option.name}</Typography>
-                        <Typography variant="caption" color="text.secondary">{option.email}</Typography>
-                      </Box>
+                  onChange={setSelectedClient}
+                  getOptionLabel={(option: Client) => option.name || ""}
+                  placeholder="Type client name..."
+                  renderOptionContent={(option: Client) => (
+                    <Box>
+                      <Typography variant="body1" fontWeight="500">{option.name}</Typography>
+                      <Typography variant="caption" color="text.secondary">{option.email}</Typography>
                     </Box>
                   )}
+                  sx={{
+                    '& .MuiOutlinedInput-root': {
+                      height: '50px'
+                    }
+                  }}
                 />
 
                 {selectedClient && (
                   <Card variant="outlined" sx={{ mt: 3, borderRadius: 2, backgroundColor: 'background.paper' }}>
                     <CardContent>
-                      <Typography variant="subtitle2" color="text.secondary" gutterBottom>SELECTED CLIENT</Typography>
+                      <Typography variant="subtitle2" color="text.secondary" gutterBottom>Selected Client</Typography>
                       <Stack direction="row" alignItems="center" spacing={2}>
                         <Box sx={{
                           width: 48, height: 48, borderRadius: '50%',
@@ -355,43 +345,30 @@ export default function InvoiceDialog({
                 <Paper variant="outlined" sx={{ p: 2, borderRadius: 2, mb: 3, borderColor: `${accentColor}50`, bgcolor: `${accentColor}08` }}>
                   <Typography variant="subtitle2" color="primary" gutterBottom fontWeight="600">NEW ITEM</Typography>
                   <Stack direction={{ xs: 'column', lg: 'row' }} spacing={2} alignItems={{ xs: 'stretch', lg: 'flex-start' }}>
-                    <Autocomplete
+                    <CustomAutocomplete
                       options={items}
-                      getOptionLabel={(option) => option.name || ""}
+                      getOptionLabel={(option: Item) => option.name || ""}
                       value={currentItem}
-                      onChange={(_, newValue) => {
+                      onChange={(newValue) => {
                         setCurrentItem(newValue);
                         if (newValue) {
                           setCurrentRate(newValue.ratePerPiece || newValue.ratePerKg || 0);
                         }
                       }}
-                      renderInput={(params) => (
-                        <TextField {...params} label="Select Item" variant="outlined" size="small" />
-                      )}
+                      placeholder="Type item name..."
                       sx={{ flex: 3 }}
-                    />
-                    <TextField
-                      label="Qty"
-                      type="number"
-                      size="small"
-                      value={currentQuantity}
-                      onChange={(e) => setCurrentQuantity(Number(e.target.value))}
-                      sx={{ flex: 1 }}
-                    />
-                    <TextField
-                      label="Rate"
-                      type="number"
-                      size="small"
-                      value={currentRate}
-                      onChange={(e) => setCurrentRate(Number(e.target.value))}
-                      sx={{ flex: 1 }}
+                      renderOptionContent={(option: Item) => (
+                        <Box>
+                          <Typography variant="body1">{option.name}</Typography>
+                        </Box>
+                      )}
                     />
                     <Button
                       variant="contained"
                       onClick={handleAddItem}
                       disabled={!currentItem}
                       startIcon={<AddIcon />}
-                      sx={{ height: 40 }}
+                      sx={{ height: 40, color: `${!currentItem ? 'gray !important' : 'theme.palette.primary.contrastText !important'}` }}
                     >
                       Add
                     </Button>
@@ -517,6 +494,7 @@ export default function InvoiceDialog({
               onClick={handleNext}
               disabled={activeStep === 0 ? !selectedClient : invoiceItems.length === 0}
               endIcon={<NavigateNextIcon />}
+              sx={{ height: 40, color: `${activeStep === 0 ? !selectedClient : invoiceItems.length === 0 ? 'gray !important' : 'theme.palette.primary.contrastText !important'}` }}
             >
               Next Step
             </Button>
@@ -533,6 +511,6 @@ export default function InvoiceDialog({
           )}
         </Box>
       </DialogContent>
-    </Dialog>
+    </Dialog >
   );
 }

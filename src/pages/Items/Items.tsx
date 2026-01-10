@@ -12,6 +12,10 @@ import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import Box from "@mui/material/Box";
 import AddItemForm from "../../components/AddItemForm/AddItemForm";
+import DeleteIcon from '@mui/icons-material/Delete';
+import { deleteDocument, deleteDocumentsBatch } from "../../firebase/firebaseUtils";
+import { APP_CONSTANTS } from "../../constants/app.constants";
+import ConfirmationDialog from "../../components/ConfirmationDialog/ConfirmationDialog";
 
 const columns: GridColDef[] = [
   { field: "name", headerName: "Name", flex: 1.5, minWidth: 200 },
@@ -24,32 +28,53 @@ const columns: GridColDef[] = [
   {
     field: "ratePerKg",
     headerName: "Rate/Kg",
-    flex: 1,
-    width: 30,
+    flex: 0.5,
+    minWidth: 80,
   },
   {
     field: "ratePerPiece",
     headerName: "Rate/Piece",
-    flex: 1,
-    width: 30,
+    flex: 0.5,
+    minWidth: 80,
   },
   {
     field: "unit",
     headerName: "Unit",
-    flex: 1,
-    width: 30,
+    flex: 0.5,
+    minWidth: 60,
   },
   {
     field: "description",
     headerName: "Description",
-    flex: 1,
-    width: 200,
+    flex: 1.5,
+    minWidth: 200,
   },
 ];
 
 function Items() {
   const { items, loading, refreshData } = useData();
   const [open, setOpen] = useState(false);
+  const [selectedItems, setSelectedItems] = useState<any[]>([]);
+  const [confirmOpen, setConfirmOpen] = useState(false);
+
+  const handleDelete = async () => {
+    setConfirmOpen(false);
+    GlobalUIService.setLoading(true);
+    const ids = selectedItems.map(i => i.id);
+    try {
+      if (ids.length === 1) {
+        await deleteDocument(APP_CONSTANTS.COLLECTIONS.ITEMS, ids[0]);
+      } else if (ids.length > 1) {
+        await deleteDocumentsBatch(APP_CONSTANTS.COLLECTIONS.ITEMS, ids);
+      }
+    } catch (error) {
+      console.error("Error deleting items:", error);
+    } finally {
+      await refreshData();
+      GlobalUIService.setLoading(false);
+      setSelectedItems([]);
+    }
+  };
 
   useEffect(() => {
     GlobalUIService.setLoading(loading);
@@ -81,13 +106,26 @@ function Items() {
         <Typography component="h2" variant="h6" sx={{ mb: 2 }}>
           Details
         </Typography>
-        <Button
-          variant="outlined"
-          onClick={handleClickOpen}
-          sx={{ width: "fit-content" }}
-        >
-          Add Item
-        </Button>
+        <Stack direction="row" spacing={2}>
+          <Button
+            variant="outlined"
+            onClick={handleClickOpen}
+            sx={{ width: "fit-content" }}
+          >
+            Add Item
+          </Button>
+
+          {selectedItems.length > 0 && (
+            <Button
+              variant="outlined"
+              onClick={() => setConfirmOpen(true)}
+              sx={{ width: "fit-content", minWidth: "auto", padding: '5px' }}
+            >
+              <DeleteIcon sx={{ color: "red" }} />
+            </Button>
+          )}
+        </Stack>
+
       </Stack>
 
       <Dialog
@@ -96,9 +134,15 @@ function Items() {
         aria-labelledby="add-item-dialog-title"
         maxWidth="md"
         fullWidth
+        PaperProps={{
+          sx: {
+            backgroundColor: 'background.paper',
+            backgroundImage: 'none',
+          }
+        }}
       >
-        <DialogTitle id="add-item-dialog-title">Add Item</DialogTitle>
-        <DialogContent>
+        <DialogTitle id="add-item-dialog-title" sx={{ color: 'text.primary' }}>Add Item</DialogTitle>
+        <DialogContent sx={{ color: 'text.secondary' }}>
           <Box sx={{ mt: 2 }}>
             <AddItemForm onSuccess={handleSuccess} />
           </Box>
@@ -107,8 +151,24 @@ function Items() {
 
       <Grid container spacing={2} columns={12}>
         <Grid size={{ xs: 12, lg: 12 }}>
-          <CustomizedDataGrid rows={items} columns={columns} />
+          <CustomizedDataGrid
+            rows={items}
+            columns={columns}
+            checkboxSelection
+            onRowSelectionModelChange={(ids: any) => {
+              const selectedRows = Array.from<string>(ids.ids);
+              setSelectedItems(selectedRows);
+            }}
+          />
         </Grid>
+        <ConfirmationDialog
+          open={confirmOpen}
+          title="Delete Items"
+          content={`Are you sure you want to delete ${selectedItems.length} item(s)? This action cannot be undone.`}
+          onConfirm={handleDelete}
+          onClose={() => setConfirmOpen(false)}
+          confirmText="Delete"
+        />
         <Grid size={{ xs: 12, lg: 3 }}>
           <Stack gap={2} direction={{ xs: "column", sm: "row", lg: "column" }}>
             {/* <CustomizedTreeView /> */}

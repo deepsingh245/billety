@@ -1,11 +1,14 @@
 import { Box, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Divider, Grid } from "@mui/material";
 import { Invoice } from "../../interfaces/invoice.interface";
+import { useData } from "../../context/dataContext";
 
 interface InvoicePDFProps {
   invoice: Invoice;
 }
 
 export default function InvoicePDF({ invoice }: InvoicePDFProps) {
+  const { currentProject } = useData();
+
   return (
     <Paper
       // elevation={3}
@@ -15,7 +18,8 @@ export default function InvoicePDF({ invoice }: InvoicePDFProps) {
         backgroundColor: 'white',
         color: 'black',
         fontFamily: 'Arial, sans-serif',
-        height: '100%'
+        height: '100%',
+        position: 'relative'
       }}
     >
       {/* Header */}
@@ -26,9 +30,9 @@ export default function InvoicePDF({ invoice }: InvoicePDFProps) {
           <Typography variant="body2">Date: {new Date(invoice.date).toLocaleDateString()}</Typography>
         </Box>
         <Box sx={{ textAlign: 'right' }}>
-          <Typography variant="h6" sx={{ fontWeight: 'bold' }}>My Company Name</Typography>
-          <Typography variant="body2">123 Business Rd.</Typography>
-          <Typography variant="body2">City, Country 12345</Typography>
+          <Typography variant="h6" sx={{ fontWeight: 'bold' }}>{currentProject?.name}</Typography>
+          <Typography variant="body2">{currentProject?.category}</Typography>
+          {/* <Typography variant="body2">City, Country 12345</Typography> */}
         </Box>
       </Box>
 
@@ -60,12 +64,12 @@ export default function InvoicePDF({ invoice }: InvoicePDFProps) {
             {invoice.items.map((item, index) => (
               <TableRow key={index}>
                 <TableCell>
-                  <Typography variant="body2" sx={{ fontWeight: 'bold' }}>{item.name}</Typography>
+                  <Typography variant="body2" sx={{ fontWeight: 'medium', color: 'black' }}>{item.name}</Typography>
                   <Typography variant="caption" color="textSecondary">{item.description}</Typography>
                 </TableCell>
-                <TableCell align="right">{item.quantity}</TableCell>
-                <TableCell align="right">{item.rate.toFixed(2)}</TableCell>
-                <TableCell align="right">{(item.quantity * item.rate).toFixed(2)}</TableCell>
+                <TableCell align="right" sx={{ fontWeight: 'medium', color: 'black' }}>{item.quantity}</TableCell>
+                <TableCell align="right" sx={{ fontWeight: 'medium', color: 'black' }}>{item.rate.toFixed(2)}</TableCell>
+                <TableCell align="right" sx={{ fontWeight: 'medium', color: 'black' }}>{(item.quantity * item.rate).toFixed(2)}</TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -94,7 +98,7 @@ export default function InvoicePDF({ invoice }: InvoicePDFProps) {
       </Box>
 
       {/* Footer */}
-      <Box sx={{ mt: 8, textAlign: 'center', color: '#666', alignSelf: 'end' }}>
+      <Box sx={{ color: '#666', position: 'absolute', bottom: 20, left: '50%', transform: 'translateX(-50%)' }}>
         <Typography variant="body2">Thank you for your business!</Typography>
       </Box>
     </Paper>

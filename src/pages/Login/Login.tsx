@@ -25,6 +25,8 @@ import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { ROUTES } from "../../constants/routes.constants";
 import { handleError } from "../../utils/error.utils";
+import { GlobalUIProvider } from "../../context/globalUIContext";
+import { GlobalUIService } from "../../utils/GlobalUIService";
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: "flex",
@@ -105,6 +107,7 @@ export default function Login(props: { disableCustomTheme?: boolean }) {
     }
 
     try {
+      GlobalUIService.setLoading(true);
       const user = await loginUser(email, password);
       if (user) {
         console.log("🚀 ~ handleSubmit ~ user:", user);
@@ -112,6 +115,8 @@ export default function Login(props: { disableCustomTheme?: boolean }) {
       }
     } catch (error) {
       handleError(error, "Login failed");
+    } finally {
+      GlobalUIService.setLoading(false);
     }
   };
 

@@ -23,6 +23,9 @@ interface DataContextType {
     loading: boolean;
     refreshData: () => Promise<void>;
     setProject: (project: Project) => void;
+    dateRange: { startDate: Date | null; endDate: Date | null };
+    setDateRange: (range: { startDate: Date | null; endDate: Date | null }) => void;
+    filteredInvoices: Invoice[];
 }
 
 const DataContext = createContext<DataContextType | undefined>(undefined);
@@ -36,6 +39,13 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const [projects] = useState<Project[]>(DUMMY_PROJECTS);
     const [currentProject, setCurrentProject] = useState<Project | null>(DUMMY_PROJECTS[0]);
 
+    // Date Range State
+    const [dateRange, setDateRange] = useState<{ startDate: Date | null; endDate: Date | null }>({
+        startDate: null,
+        endDate: null
+    });
+
+    // Date Range State
     const [loading, setLoading] = useState<boolean>(true);
 
     const fetchData = useCallback(async () => {
@@ -65,6 +75,26 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         setCurrentProject(project);
     };
 
+    const filteredInvoices = React.useMemo(() => {
+        if (!dateRange.startDate && !dateRange.endDate) {
+            return invoices;
+        }
+
+        return invoices.filter((invoice) => {
+            const invoiceDate = new Date(invoice.date);
+            const { startDate, endDate } = dateRange;
+
+            if (startDate && invoiceDate < startDate) return false;
+            if (endDate) {
+                const endOfDay = new Date(endDate);
+                endOfDay.setHours(23, 59, 59, 999);
+                if (invoiceDate > endOfDay) return false;
+            }
+
+            return true;
+        });
+    }, [invoices, dateRange]);
+
     return (
         <DataContext.Provider value={{
             clients,
@@ -74,7 +104,10 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             currentProject,
             loading,
             refreshData: fetchData,
-            setProject
+            setProject,
+            dateRange,
+            setDateRange,
+            filteredInvoices
         }}>
             {children}
         </DataContext.Provider>

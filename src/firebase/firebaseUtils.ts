@@ -41,14 +41,16 @@ export async function createDocument<T>(
   collectionPath: string,
   data: T,
   customId?: string
-): Promise<void> {
+): Promise<string | undefined> {
   try {
     const ref = customId
       ? doc(db, collectionPath, customId)
-      : doc(collection(db, collectionPath)); // Corrected
+      : doc(collection(db, collectionPath));
     await setDoc(ref, data);
+    return ref.id;
   } catch (error) {
     console.error("Error creating document:", error);
+    return undefined;
   }
 }
 

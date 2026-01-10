@@ -1,22 +1,23 @@
 import { useForm } from "react-hook-form";
 import Grid from "@mui/material/Grid";
 import {
-  //   Grid,
   FormLabel,
   OutlinedInput,
   FormHelperText,
   Button,
   FormControl,
 } from "@mui/material";
+import Stack from "@mui/material/Stack";
 import { Client } from "../../interfaces/client.interface";
 import { createDocument } from "../../firebase/firebaseUtils";
 import { GlobalUIService } from "../../utils/GlobalUIService";
 
 interface AddClientFormProps {
   onSuccess?: () => void;
+  onCancel?: () => void;
 }
 
-export default function AddClientForm({ onSuccess }: AddClientFormProps) {
+export default function AddClientForm({ onSuccess, onCancel }: AddClientFormProps) {
   const {
     register,
     handleSubmit,
@@ -38,11 +39,12 @@ export default function AddClientForm({ onSuccess }: AddClientFormProps) {
       <Grid container spacing={3}>
         <Grid size={{ xs: 12, md: 6 }}>
           <FormControl fullWidth error={!!errors.name}>
-            <FormLabel required>Name</FormLabel>
+            <FormLabel required sx={{ color: 'text.secondary', mb: 1 }}>Name</FormLabel>
             <OutlinedInput
               size="small"
               placeholder="John Doe"
               {...register("name", { required: "Name is required" })}
+              sx={{ bgcolor: 'background.paper' }}
             />
             {errors.name && (
               <FormHelperText>{errors.name.message}</FormHelperText>
@@ -52,7 +54,7 @@ export default function AddClientForm({ onSuccess }: AddClientFormProps) {
 
         <Grid size={{ xs: 12, md: 6 }}>
           <FormControl fullWidth error={!!errors.email}>
-            <FormLabel required>Email</FormLabel>
+            <FormLabel required sx={{ color: 'text.secondary', mb: 1 }}>Email</FormLabel>
             <OutlinedInput
               size="small"
               type="email"
@@ -64,6 +66,7 @@ export default function AddClientForm({ onSuccess }: AddClientFormProps) {
                   message: "Invalid email address",
                 },
               })}
+              sx={{ bgcolor: 'background.paper' }}
             />
             {errors.email && (
               <FormHelperText>{errors.email.message}</FormHelperText>
@@ -73,11 +76,12 @@ export default function AddClientForm({ onSuccess }: AddClientFormProps) {
 
         <Grid size={{ xs: 12, md: 6 }}>
           <FormControl fullWidth error={!!errors.phone}>
-            <FormLabel required>Phone</FormLabel>
+            <FormLabel required sx={{ color: 'text.secondary', mb: 1 }}>Phone</FormLabel>
             <OutlinedInput
               size="small"
               placeholder="123-456-7890"
               {...register("phone", { required: "Phone number is required" })}
+              sx={{ bgcolor: 'background.paper' }}
             />
             {errors.phone && (
               <FormHelperText>{errors.phone.message}</FormHelperText>
@@ -87,11 +91,12 @@ export default function AddClientForm({ onSuccess }: AddClientFormProps) {
 
         <Grid size={{ xs: 12, md: 6 }}>
           <FormControl fullWidth error={!!errors.company}>
-            <FormLabel required>Company</FormLabel>
+            <FormLabel required sx={{ color: 'text.secondary', mb: 1 }}>Company</FormLabel>
             <OutlinedInput
               size="small"
               placeholder="Example Inc."
               {...register("company", { required: "Company is required" })}
+              sx={{ bgcolor: 'background.paper' }}
             />
             {errors.company && (
               <FormHelperText>{errors.company.message}</FormHelperText>
@@ -101,7 +106,7 @@ export default function AddClientForm({ onSuccess }: AddClientFormProps) {
 
         <Grid size={{ xs: 12 }}>
           <FormControl fullWidth error={!!errors.receivables}>
-            <FormLabel required>Receivables</FormLabel>
+            <FormLabel required sx={{ color: 'text.secondary', mb: 1 }}>Receivables</FormLabel>
             <OutlinedInput
               size="small"
               type="number"
@@ -110,6 +115,7 @@ export default function AddClientForm({ onSuccess }: AddClientFormProps) {
                 required: "Receivables is required",
                 valueAsNumber: true,
               })}
+              sx={{ bgcolor: 'background.paper' }}
             />
             {errors.receivables && (
               <FormHelperText>{errors.receivables.message}</FormHelperText>
@@ -117,11 +123,14 @@ export default function AddClientForm({ onSuccess }: AddClientFormProps) {
           </FormControl>
         </Grid>
 
-        <Grid size={{ xs: 12 }}>
-          <Button type="submit" variant="contained" color="primary">
+        <Stack direction="row" spacing={2} sx={{ width: '100%', justifyContent: 'flex-end', mt: 2 }}>
+          <Button variant="outlined" color="primary" onClick={onCancel} type="button">
+            Cancel
+          </Button>
+          <Button type="submit" variant="contained" color="primary" sx={{ color: 'white' }}>
             Submit Client
           </Button>
-        </Grid>
+        </Stack>
       </Grid>
     </form>
   );

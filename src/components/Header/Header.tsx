@@ -4,10 +4,13 @@ import CustomDatePicker from '../CustomDatePicker/CustomDatePicker';
 import NavbarBreadcrumbs from '../NavbarBreadcrumbs/NavbarBreadcrumbs';
 import MenuButton from '../MenuButton/MenuButton';
 import ColorModeIconDropdown from '../../shared/ColorModeIconDropdown';
-
 import Search from '../Search/Search';
+import { useLocation } from 'react-router-dom';
 
 export default function Header() {
+  const location = useLocation();
+  const showDatePicker = location.pathname.includes('/invoices');
+
   return (
     <Stack
       direction="row"
@@ -23,9 +26,9 @@ export default function Header() {
     >
       <NavbarBreadcrumbs />
       <Stack direction="row" sx={{ gap: 1 }}>
-        <Search />
-        <CustomDatePicker />
-        <MenuButton showBadge aria-label="Open notifications">
+        <Search disabled />
+        {showDatePicker && <CustomDatePicker />}
+        <MenuButton aria-label="Open notifications" disabled>
           <NotificationsRoundedIcon />
         </MenuButton>
         <ColorModeIconDropdown />

@@ -30,17 +30,29 @@ export default function NavbarBreadcrumbs() {
       {pathnames.map((value, index) => {
         const last = index === pathnames.length - 1;
         const to = `/${pathnames.slice(0, index + 1).join('/')}`;
-        const name = value.charAt(0).toUpperCase() + value.slice(1);
-
         if (value === 'dashboard') return null;
+
+        // Check if value looks like an ID (basic alphanumeric check or length)
+        // Adjust logic as needed for your ID format (e.g., Firebase IDs are usually ~20 chars)
+        const isId = value.length > 20 || /\d/.test(value);
+
+        let displayName = value.charAt(0).toUpperCase() + value.slice(1);
+        if (isId) {
+          const prevSegment = pathnames[index - 1];
+          // Simple mapping based on parent route. Add more cases as needed.
+          if (prevSegment === 'invoices') displayName = 'Invoice Details';
+          else if (prevSegment === 'clients') displayName = 'Client Details';
+          else if (prevSegment === 'items') displayName = 'Item Details';
+          else displayName = 'Details';
+        }
 
         return last ? (
           <Typography key={to} variant="body1" sx={{ color: 'text.primary', fontWeight: 600 }}>
-            {name}
+            {displayName}
           </Typography>
         ) : (
           <Link component={RouterLink} underline="hover" color="inherit" to={to} key={to}>
-            <Typography variant="body1">{name}</Typography>
+            <Typography variant="body1">{displayName}</Typography>
           </Link>
         );
       })}
