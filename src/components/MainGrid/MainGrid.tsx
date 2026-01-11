@@ -1,9 +1,9 @@
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
-import Copyright from '../internals/components/Copyright';
+import { useTheme } from '@mui/material/styles';
 import { GlobeFlag } from '../internals/components/CustomIcons';
-import ChartUserByCountry from '../ChartUserByCountry/ChartUserByCountry';
+import TopClientsChart from '../TopClientsChart/TopClientsChart';
 import PageViewsBarChart from '../PageViewsBarChart/PageViewsBarChart';
 import SessionsChart from '../SessionsChart/SessionsChart';
 import StatCard, { StatCardProps } from '../StatCard/StatCard';
@@ -11,6 +11,7 @@ import { useData } from '../../context/dataContext';
 import { APP_CONSTANTS, CURRENCY } from '../../constants/app.constants';
 
 export default function MainGrid() {
+  const theme = useTheme();
   const { clients, invoices, items } = useData();
   const currency = useData().settings.currency;
 
@@ -46,11 +47,16 @@ export default function MainGrid() {
   const itemNames = items.slice(0, 5).map(i => i.name);
   const itemRates = items.slice(0, 5).map(i => i.ratePerPiece || i.ratePerKg || 0);
 
-  // Prepare data for ChartUserByCountry (Top Clients by Name)
+  // Prepare data for TopClientsChart (Top Clients by Name)
   const topClients = clients.slice(0, 4).map((client, index) => ({
     name: client.name,
     value: 25, // Mock percentage for now as we just list them
-    color: `hsl(220, 25%, ${65 - index * 15}%)`,
+    color: [
+      theme.palette.primary[200],
+      theme.palette.primary[400],
+      theme.palette.primary[700],
+      theme.palette.primary[900]
+    ][index] || theme.palette.primary.main,
     flag: <GlobeFlag />,
   }));
 
@@ -92,7 +98,7 @@ export default function MainGrid() {
           />
         </Grid>
         <Grid size={{ xs: 12, lg: 3 }}>
-          <ChartUserByCountry
+          <TopClientsChart
             title="Top Clients"
             totalLabel="Clients"
             totalValue={clients.length.toString()}
@@ -113,7 +119,6 @@ export default function MainGrid() {
           />
         </Grid>
       </Grid>
-      <Copyright sx={{ my: 4 }} />
     </Box>
   );
 }

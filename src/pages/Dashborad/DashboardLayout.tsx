@@ -1,8 +1,8 @@
 
-import type {} from '@mui/x-date-pickers/themeAugmentation';
-import type {} from '@mui/x-charts/themeAugmentation';
-import type {} from '@mui/x-data-grid-pro/themeAugmentation';
-import type {} from '@mui/x-tree-view/themeAugmentation';
+import type { } from '@mui/x-date-pickers/themeAugmentation';
+import type { } from '@mui/x-charts/themeAugmentation';
+import type { } from '@mui/x-data-grid-pro/themeAugmentation';
+import type { } from '@mui/x-tree-view/themeAugmentation';
 import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
 import { chartsCustomizations, dataGridCustomizations, datePickersCustomizations, treeViewCustomizations } from '../../shared/theme/customizations';
@@ -22,13 +22,16 @@ const xThemeComponents = {
   ...treeViewCustomizations,
 };
 
+import { useData } from '../../context/dataContext';
+
 export default function Dashboard(props: { disableCustomTheme?: boolean }) {
+  const { currentTheme } = useData();
   return (
-    <AppTheme {...props} themeComponents={xThemeComponents}>
+    <AppTheme {...props} themeComponents={xThemeComponents} themeName={currentTheme}>
       <CssBaseline enableColorScheme />
       <Box sx={{ display: 'flex' }}>
         <SideMenu />
-         <AppNavbar />
+        <AppNavbar />
         {/* Main content */}
         <Box
           component="main"
@@ -50,7 +53,7 @@ export default function Dashboard(props: { disableCustomTheme?: boolean }) {
             }}
           >
             <Header />
-        <Outlet />
+            <Outlet />
           </Stack>
         </Box>
       </Box>

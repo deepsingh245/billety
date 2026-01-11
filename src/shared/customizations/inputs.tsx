@@ -6,7 +6,7 @@ import { toggleButtonClasses } from '@mui/material/ToggleButton';
 import CheckBoxOutlineBlankRoundedIcon from '@mui/icons-material/CheckBoxOutlineBlankRounded';
 import CheckRoundedIcon from '@mui/icons-material/CheckRounded';
 import RemoveRoundedIcon from '@mui/icons-material/RemoveRounded';
-import { gray, brand } from '../themePrimitives';
+import { gray } from '../themePrimitives';
 
 /* eslint-disable import/prefer-default-export */
 export const inputsCustomizations: Components<Theme> = {
@@ -93,16 +93,16 @@ export const inputsCustomizations: Components<Theme> = {
             },
             style: {
               color: 'white',
-              backgroundColor: brand[300],
-              backgroundImage: `linear-gradient(to bottom, ${alpha(brand[400], 0.8)}, ${brand[500]})`,
-              boxShadow: `inset 0 2px 0 ${alpha(brand[200], 0.2)}, inset 0 -2px 0 ${alpha(brand[700], 0.4)}`,
-              border: `1px solid ${brand[500]}`,
+              backgroundColor: theme.palette.primary.main,
+              backgroundImage: `linear-gradient(to bottom, ${alpha(theme.palette.primary.main, 0.8)}, ${theme.palette.primary.main})`,
+              boxShadow: `inset 0 2px 0 ${alpha(theme.palette.primary.light, 0.2)}, inset 0 -2px 0 ${alpha(theme.palette.primary.dark, 0.4)}`,
+              border: `1px solid ${theme.palette.primary[500]}`,
               '&:hover': {
-                backgroundColor: brand[700],
+                backgroundColor: theme.palette.primary.dark,
                 boxShadow: 'none',
               },
               '&:active': {
-                backgroundColor: brand[700],
+                backgroundColor: theme.palette.primary.dark,
                 backgroundImage: 'none',
               },
             },
@@ -143,28 +143,28 @@ export const inputsCustomizations: Components<Theme> = {
               variant: 'outlined',
             },
             style: {
-              color: brand[700],
+              color: theme.palette.primary.dark,
               border: '1px solid',
-              borderColor: brand[200],
-              backgroundColor: brand[50],
+              borderColor: theme.palette.primary.light,
+              backgroundColor: theme.palette.primary[50],
               '&:hover': {
-                backgroundColor: brand[100],
-                borderColor: brand[400],
+                backgroundColor: theme.palette.primary[100],
+                borderColor: theme.palette.primary[400],
               },
               '&:active': {
-                backgroundColor: alpha(brand[200], 0.7),
+                backgroundColor: alpha(theme.palette.primary.light, 0.7),
               },
               ...theme.applyStyles('dark', {
-                color: brand[50],
+                color: theme.palette.primary[50],
                 border: '1px solid',
-                borderColor: brand[900],
-                backgroundColor: alpha(brand[900], 0.3),
+                borderColor: theme.palette.primary[900],
+                backgroundColor: alpha(theme.palette.primary[900], 0.3),
                 '&:hover': {
-                  borderColor: brand[700],
-                  backgroundColor: alpha(brand[900], 0.6),
+                  borderColor: theme.palette.primary.dark,
+                  backgroundColor: alpha(theme.palette.primary[900], 0.6),
                 },
                 '&:active': {
-                  backgroundColor: alpha(brand[900], 0.5),
+                  backgroundColor: alpha(theme.palette.primary[900], 0.5),
                 },
               }),
             },
@@ -198,20 +198,20 @@ export const inputsCustomizations: Components<Theme> = {
               variant: 'text',
             },
             style: {
-              color: brand[700],
+              color: theme.palette.primary.dark,
               '&:hover': {
-                backgroundColor: alpha(brand[100], 0.5),
+                backgroundColor: alpha(theme.palette.primary[100], 0.5),
               },
               '&:active': {
-                backgroundColor: alpha(brand[200], 0.7),
+                backgroundColor: alpha(theme.palette.primary.light, 0.7),
               },
               ...theme.applyStyles('dark', {
-                color: brand[100],
+                color: theme.palette.primary[100],
                 '&:hover': {
-                  backgroundColor: alpha(brand[900], 0.5),
+                  backgroundColor: alpha(theme.palette.primary[900], 0.5),
                 },
                 '&:active': {
-                  backgroundColor: alpha(brand[900], 0.3),
+                  backgroundColor: alpha(theme.palette.primary[900], 0.3),
                 },
               }),
             },
@@ -281,13 +281,13 @@ export const inputsCustomizations: Components<Theme> = {
         borderRadius: '10px',
         boxShadow: `0 4px 16px ${alpha(gray[400], 0.2)}`,
         [`& .${toggleButtonGroupClasses.selected}`]: {
-          color: brand[500],
+          color: theme.palette.primary.main,
         },
         ...theme.applyStyles('dark', {
           [`& .${toggleButtonGroupClasses.selected}`]: {
             color: '#fff',
           },
-          boxShadow: `0 4px 16px ${alpha(brand[700], 0.5)}`,
+          boxShadow: `0 4px 16px ${alpha(theme.palette.primary.dark, 0.5)}`,
         }),
       }),
     },
@@ -303,7 +303,7 @@ export const inputsCustomizations: Components<Theme> = {
           color: gray[400],
           boxShadow: '0 4px 16px rgba(0, 0, 0, 0.5)',
           [`&.${toggleButtonClasses.selected}`]: {
-            color: brand[300],
+            color: theme.palette.primary.light,
           },
         }),
       }),
@@ -330,20 +330,20 @@ export const inputsCustomizations: Components<Theme> = {
         backgroundColor: alpha(gray[100], 0.4),
         transition: 'border-color, background-color, 120ms ease-in',
         '&:hover': {
-          borderColor: brand[300],
+          borderColor: theme.palette.primary.light,
         },
         '&.Mui-focusVisible': {
-          outline: `3px solid ${alpha(brand[500], 0.5)}`,
+          outline: `3px solid ${alpha(theme.palette.primary.main, 0.5)}`,
           outlineOffset: '2px',
-          borderColor: brand[400],
+          borderColor: theme.palette.primary.main,
         },
         '&.Mui-checked': {
           color: 'white',
-          backgroundColor: brand[500],
-          borderColor: brand[500],
+          backgroundColor: theme.palette.primary.main,
+          borderColor: theme.palette.primary.main,
           boxShadow: `none`,
           '&:hover': {
-            backgroundColor: brand[600],
+            backgroundColor: theme.palette.primary.dark,
           },
         },
         ...theme.applyStyles('dark', {
@@ -351,11 +351,11 @@ export const inputsCustomizations: Components<Theme> = {
           boxShadow: '0 0 0 1.5px hsl(210, 0%, 0%) inset',
           backgroundColor: alpha(gray[900], 0.8),
           '&:hover': {
-            borderColor: brand[300],
+            borderColor: theme.palette.primary.light,
           },
           '&.Mui-focusVisible': {
-            borderColor: brand[400],
-            outline: `3px solid ${alpha(brand[500], 0.5)}`,
+            borderColor: theme.palette.primary.main,
+            outline: `3px solid ${alpha(theme.palette.primary.main, 0.5)}`,
             outlineOffset: '2px',
           },
         }),

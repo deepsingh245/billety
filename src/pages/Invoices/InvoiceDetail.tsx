@@ -34,6 +34,8 @@ import SendIcon from "@mui/icons-material/Send";
 import { exportToPDF } from "../../utils/pdf.utils";
 import { sendInvoiceEmail } from "../../utils/email.utils";
 import AddIcon from "@mui/icons-material/Add";
+import TemplateSelectionModal from "../../components/InvoicePDF/TemplateSelectionModal";
+import TemplatePreviewDialog from "../../components/InvoicePDF/TemplatePreviewDialog";
 
 export default function InvoiceDetail() {
   const { id } = useParams();
@@ -45,6 +47,11 @@ export default function InvoiceDetail() {
   const [clients, setClients] = useState<Client[]>([]);
   const [items, setItems] = useState<Item[]>([]);
   const [tabIndex, setTabIndex] = useState(0);
+
+  // Template Modal State
+  const [showTemplateModal, setShowTemplateModal] = useState(false);
+  const [showPreviewModal, setShowPreviewModal] = useState(false);
+  const [previewTemplateId, setPreviewTemplateId] = useState<string>('standard');
 
   // Item Selection State
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
@@ -175,7 +182,12 @@ export default function InvoiceDetail() {
 
   const EditSection = () => (
     <Paper elevation={3} sx={{ p: 3, borderRadius: 2, height: '100%', overflowY: 'auto' }}>
-      <Typography variant="h6" gutterBottom color="primary">Edit Invoice Details</Typography>
+      <Stack direction="row" justifyContent="space-between" alignItems="center" mb={1}>
+        <Typography variant="h6" color="primary">Edit Invoice Details</Typography>
+        <Button variant="outlined" size="small" onClick={() => setShowTemplateModal(true)}>
+          Change Template
+        </Button>
+      </Stack>
       <Divider sx={{ mb: 2 }} />
 
       <Box sx={{ mb: 4 }}>
@@ -184,7 +196,7 @@ export default function InvoiceDetail() {
           options={clients}
           getOptionLabel={(option: Client) => option.name || ""}
           value={invoice.client}
-          disabled
+          sx={{ pointerEvents: 'none', opacity: 0.7 }}
           // isOptionEqualToValue={(option, value) => option?.id === value?.id}
           onChange={(newValue) => handleClientChange(newValue)}
           label="Select Client"
@@ -369,6 +381,35 @@ export default function InvoiceDetail() {
             <PreviewSection />
           </Grid>
         </Grid>
+      )}
+
+      {invoice && (
+        <>
+          <TemplateSelectionModal
+            open={showTemplateModal}
+            onClose={() => setShowTemplateModal(false)}
+            selectedTemplateId={invoice.templateId || 'standard'}
+            onSelect={(id) => {
+              setInvoice({ ...invoice, templateId: id });
+              setShowTemplateModal(false);
+            }}
+            onPreview={(id) => {
+              setPreviewTemplateId(id);
+              setShowPreviewModal(true);
+            }}
+          />
+
+          <TemplatePreviewDialog
+            open={showPreviewModal}
+            onClose={() => setShowPreviewModal(false)}
+            templateId={previewTemplateId}
+            onSelect={() => {
+              setInvoice({ ...invoice, templateId: previewTemplateId });
+              setShowPreviewModal(false);
+              setShowTemplateModal(false);
+            }}
+          />
+        </>
       )}
     </Box>
   );

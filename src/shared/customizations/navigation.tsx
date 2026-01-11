@@ -7,7 +7,7 @@ import { menuItemClasses } from '@mui/material/MenuItem';
 import { selectClasses } from '@mui/material/Select';
 import { tabClasses } from '@mui/material/Tab';
 import UnfoldMoreRoundedIcon from '@mui/icons-material/UnfoldMoreRounded';
-import { gray, brand } from '../themePrimitives';
+import { gray } from '../themePrimitives';
 import React from 'react';
 
 /* eslint-disable import/prefer-default-export */
@@ -141,7 +141,7 @@ export const navigationCustomizations: Components<Theme> = {
           width: 0,
         },
         '&:focus-visible': {
-          outline: `3px solid ${alpha(brand[500], 0.5)}`,
+          outline: `3px solid ${alpha(theme.palette.primary.main, 0.5)}`,
           outlineOffset: '4px',
           borderRadius: '2px',
         },

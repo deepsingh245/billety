@@ -16,8 +16,10 @@ import InputLabel from "@mui/material/InputLabel";
 import { useTranslation } from 'react-i18next';
 import { useData } from "../../context/dataContext";
 
+import { themes } from "../../shared/themePrimitives";
+
 export default function Settings() {
-    const { settings, updateSettings } = useData();
+    const { settings, updateSettings, currentTheme, updateProjectTheme } = useData();
     const { t } = useTranslation();
 
     const handleNotificationChange = (type: 'email' | 'push', value: boolean) => {
@@ -98,6 +100,23 @@ export default function Settings() {
                                         <MenuItem value="EUR">EUR (€)</MenuItem>
                                         <MenuItem value="INR">INR (₹)</MenuItem>
                                         <MenuItem value="GBP">GBP (£)</MenuItem>
+                                    </Select>
+                                </FormControl>
+
+                                <FormControl fullWidth>
+                                    <InputLabel id="theme-select-label">Theme</InputLabel>
+                                    <Select
+                                        labelId="theme-select-label"
+                                        id="theme-select"
+                                        value={currentTheme}
+                                        label="Theme"
+                                        onChange={(e) => updateProjectTheme(e.target.value)}
+                                    >
+                                        {Object.keys(themes).map((themeName) => (
+                                            <MenuItem key={themeName} value={themeName}>
+                                                {themeName}
+                                            </MenuItem>
+                                        ))}
                                     </Select>
                                 </FormControl>
                             </Box>

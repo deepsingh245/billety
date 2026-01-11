@@ -7,7 +7,7 @@ import {
   Step,
   StepLabel,
   Stepper,
-  TextField,
+
   Typography,
   Stack,
   IconButton,
@@ -22,8 +22,8 @@ import {
   Card,
   CardContent,
   useMediaQuery,
-  useTheme,
 } from "@mui/material";
+import { useTheme, alpha } from "@mui/material/styles";
 import { useState, useEffect } from "react";
 import { getAllDocuments, createDocument } from "../../firebase/firebaseUtils";
 import { APP_CONSTANTS } from "../../constants/app.constants";
@@ -45,7 +45,10 @@ import { GlobalUIService } from "../../utils/GlobalUIService";
 import { handleError } from "../../utils/error.utils";
 import { CustomAutocomplete } from "../../components/CustomAutocomplete/CustomAutocomplete";
 import { useData } from "../../context/dataContext";
-import { colorSchemes } from "../../shared/themePrimitives";
+
+
+import TemplateSelectionModal from "../../components/InvoicePDF/TemplateSelectionModal";
+import TemplatePreviewDialog from "../../components/InvoicePDF/TemplatePreviewDialog";
 
 interface InvoiceDialogProps {
   open: boolean;
@@ -73,6 +76,12 @@ export default function InvoiceDialog({
   const [currentItem, setCurrentItem] = useState<Item | null>(null);
   const [currentQuantity, setCurrentQuantity] = useState<number>(1);
   const [currentRate, setCurrentRate] = useState<number>(0);
+
+  // Template Selection
+  const [selectedTemplateId, setSelectedTemplateId] = useState<string>('standard');
+  const [showTemplateModal, setShowTemplateModal] = useState(false);
+  const [showPreviewModal, setShowPreviewModal] = useState(false);
+  const [previewTemplateId, setPreviewTemplateId] = useState<string>('standard');
 
   useEffect(() => {
     if (open) {
@@ -128,15 +137,16 @@ export default function InvoiceDialog({
 
     GlobalUIService.setLoading(true);
     try {
-      const invoiceData = {
+      const newInvoice = {
         client: selectedClient,
         items: invoiceItems,
         date: new Date().toISOString(),
         status: "draft",
-        totalAmount: invoiceItems.reduce((sum, item) => sum + (item.quantity * item.rate), 0),
+        totalAmount: totalAmount,
+        templateId: selectedTemplateId,
       };
 
-      const docRef = await createDocument(APP_CONSTANTS.COLLECTIONS.INVOICES, invoiceData);
+      const docRef = await createDocument(APP_CONSTANTS.COLLECTIONS.INVOICES, newInvoice);
       await refreshData();
       GlobalUIService.setLoading(false);
       onClose();
@@ -157,11 +167,7 @@ export default function InvoiceDialog({
 
   const totalAmount = invoiceItems.reduce((sum, item) => sum + (item.quantity * item.rate), 0);
 
-  // Custom colors derived from the theme primitives
-  const dialogBg = colorSchemes.dark.palette.background.paper;
-  const contentBg = colorSchemes.dark.palette.background.default;
-  const accentColor = colorSchemes.dark.palette.primary.main;
-  const borderColor = colorSchemes.dark.palette.divider;
+
 
   return (
     <Dialog
@@ -172,12 +178,13 @@ export default function InvoiceDialog({
       fullScreen={fullScreen}
       PaperProps={{
         sx: {
-          backgroundColor: dialogBg,
+          backgroundColor: 'background.paper',
           backgroundImage: 'none',
           borderRadius: fullScreen ? 0 : 3,
           boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)',
           overflow: 'hidden',
-          border: `1px solid ${borderColor}`,
+          border: '1px solid',
+          borderColor: 'divider',
         }
       }}
     >
@@ -186,15 +193,16 @@ export default function InvoiceDialog({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
-        borderBottom: `1px solid ${borderColor}`,
-        background: `linear-gradient(to right, ${colorSchemes.dark.palette.background.paper}, ${colorSchemes.dark.palette.background.default})`
+        borderBottom: '1px solid',
+        borderColor: 'divider',
+        background: 'linear-gradient(to right, var(--template-palette-background-paper), var(--template-palette-background-default))'
       }}>
         <Stack direction="row" spacing={2} alignItems="center">
           <Box sx={{
             p: 1,
             borderRadius: 2,
-            backgroundColor: `${accentColor}15`,
-            color: accentColor,
+            backgroundColor: 'rgba(var(--template-palette-primary-mainChannel) / 0.1)',
+            color: 'primary.main',
             display: 'flex'
           }}>
             <ReceiptIcon />
@@ -218,17 +226,18 @@ export default function InvoiceDialog({
           {/* Left Sidebar - Stepper */}
           <Box sx={{
             width: 250,
-            borderRight: `1px solid ${borderColor}`,
+            borderRight: '1px solid',
+            borderColor: 'divider',
             p: 3,
             display: { xs: 'none', md: 'block' },
-            bgcolor: contentBg
+            bgcolor: 'background.default'
           }}>
-            <Stepper activeStep={activeStep} orientation="vertical" connector={<span style={{ backgroundColor: borderColor, height: 50, width: '2px', marginLeft: '10px' }} />}>
+            <Stepper activeStep={activeStep} orientation="vertical" connector={<span style={{ backgroundColor: 'var(--template-palette-divider)', height: 50, width: '2px', marginLeft: '10px' }} />}>
               <Step>
                 <StepLabel
                   StepIconComponent={(props) => (
                     <Box sx={{
-                      color: props.active ? accentColor : props.completed ? 'success.main' : 'text.disabled',
+                      color: props.active ? 'primary.main' : props.completed ? 'success.main' : 'text.disabled',
                     }}>
                       {props.completed ? <CheckCircleIcon /> : <PersonIcon />}
                     </Box>
@@ -243,7 +252,7 @@ export default function InvoiceDialog({
                 <StepLabel
                   StepIconComponent={(props) => (
                     <Box sx={{
-                      color: props.active ? accentColor : props.completed ? 'success.main' : 'text.disabled',
+                      color: props.active ? 'primary.main' : props.completed ? 'success.main' : 'text.disabled',
                     }}>
                       {props.completed ? <CheckCircleIcon /> : <ShoppingCartIcon />}
                     </Box>
@@ -258,7 +267,7 @@ export default function InvoiceDialog({
                 <StepLabel
                   StepIconComponent={(props) => (
                     <Box sx={{
-                      color: props.active ? accentColor : props.completed ? 'success.main' : 'text.disabled',
+                      color: props.active ? 'primary.main' : props.completed ? 'success.main' : 'text.disabled',
                     }}>
                       {props.completed ? <CheckCircleIcon /> : <ReceiptIcon />}
                     </Box>
@@ -270,6 +279,19 @@ export default function InvoiceDialog({
                 </StepLabel>
               </Step>
             </Stepper>
+
+            <Box sx={{ mt: 4, pt: 4, borderTop: '1px solid', borderColor: 'divider' }}>
+              <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block', mb: 1 }}>TEMPLATE</Typography>
+              <Button
+                variant="outlined"
+                fullWidth
+                size="small"
+                onClick={() => setShowTemplateModal(true)}
+              // startIcon={<DashboardCustomizeIcon />} // optional if icon available
+              >
+                Change Template
+              </Button>
+            </Box>
           </Box>
 
           {/* Main Content Area */}
@@ -342,7 +364,7 @@ export default function InvoiceDialog({
                   Add Line Items
                 </Typography>
 
-                <Paper variant="outlined" sx={{ p: 2, borderRadius: 2, mb: 3, borderColor: `${accentColor}50`, bgcolor: `${accentColor}08` }}>
+                <Paper variant="outlined" sx={{ p: 2, borderRadius: 2, mb: 3, borderColor: 'rgba(var(--template-palette-primary-mainChannel) / 0.3)', bgcolor: 'rgba(var(--template-palette-primary-mainChannel) / 0.05)' }}>
                   <Typography variant="subtitle2" color="primary" gutterBottom fontWeight="600">NEW ITEM</Typography>
                   <Stack direction={{ xs: 'column', lg: 'row' }} spacing={2} alignItems={{ xs: 'stretch', lg: 'flex-start' }}>
                     <CustomAutocomplete
@@ -365,12 +387,14 @@ export default function InvoiceDialog({
                     />
                     <Button
                       variant="contained"
+                      color="secondary"
                       onClick={handleAddItem}
                       disabled={!currentItem}
                       startIcon={<AddIcon />}
-                      sx={{ height: 40, color: `${!currentItem ? 'gray !important' : 'theme.palette.primary.contrastText !important'}` }}
+                      sx={{ height: 40 }}
                     >
                       Add
+
                     </Button>
                   </Stack>
                 </Paper>
@@ -478,7 +502,7 @@ export default function InvoiceDialog({
         </Box>
 
         {/* Footer Actions */}
-        <Box sx={{ p: 2, borderTop: `1px solid ${borderColor}`, display: 'flex', justifyContent: 'flex-end', gap: 2, bgcolor: dialogBg }}>
+        <Box sx={{ p: 2, borderTop: '1px solid', borderColor: 'divider', display: 'flex', justifyContent: 'flex-end', gap: 2, bgcolor: 'background.paper' }}>
           {activeStep > 0 && (
             <Button
               onClick={handleBack}
@@ -491,10 +515,11 @@ export default function InvoiceDialog({
           {activeStep < 2 ? (
             <Button
               variant="contained"
+              color="secondary"
               onClick={handleNext}
               disabled={activeStep === 0 ? !selectedClient : invoiceItems.length === 0}
               endIcon={<NavigateNextIcon />}
-              sx={{ height: 40, color: `${(activeStep === 0 ? !selectedClient : invoiceItems.length === 0) ? 'gray !important' : 'theme.palette.primary.contrastText !important'}` }}
+              sx={{ height: 40 }}
             >
               Next Step
             </Button>
@@ -511,6 +536,31 @@ export default function InvoiceDialog({
           )}
         </Box>
       </DialogContent>
+
+      <TemplateSelectionModal
+        open={showTemplateModal}
+        onClose={() => setShowTemplateModal(false)}
+        selectedTemplateId={selectedTemplateId}
+        onSelect={(id) => {
+          setSelectedTemplateId(id);
+          setShowTemplateModal(false);
+        }}
+        onPreview={(id) => {
+          setPreviewTemplateId(id);
+          setShowPreviewModal(true);
+        }}
+      />
+
+      <TemplatePreviewDialog
+        open={showPreviewModal}
+        onClose={() => setShowPreviewModal(false)}
+        templateId={previewTemplateId}
+        onSelect={() => {
+          setSelectedTemplateId(previewTemplateId);
+          setShowPreviewModal(false);
+          setShowTemplateModal(false);
+        }}
+      />
     </Dialog >
   );
 }

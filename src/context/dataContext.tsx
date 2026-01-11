@@ -30,9 +30,11 @@ interface DataContextType {
     items: Item[];
     projects: Project[];
     currentProject: Project | null;
+    currentTheme: string;
     loading: boolean;
     refreshData: () => Promise<void>;
     setProject: (project: Project) => void;
+    updateProjectTheme: (theme: string) => void;
     dateRange: { startDate: Date | null; endDate: Date | null };
     setDateRange: (range: { startDate: Date | null; endDate: Date | null }) => void;
     filteredInvoices: Invoice[];
@@ -51,6 +53,21 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     // Project State
     const [projects, setProjects] = useState<Project[]>(DUMMY_PROJECTS);
     const [currentProject, setCurrentProject] = useState<Project | null>(DUMMY_PROJECTS[0]);
+
+    // Theme State
+    const [siteThemes, setSiteThemes] = useState<Record<string, string>>(() => {
+        const saved = localStorage.getItem('SITE_THEMES');
+        return saved ? JSON.parse(saved) : {};
+    });
+
+    const currentTheme = currentProject ? (siteThemes[currentProject.id] || 'Blue') : 'Blue';
+
+    const updateProjectTheme = (theme: string) => {
+        if (!currentProject) return;
+        const newThemes = { ...siteThemes, [currentProject.id]: theme };
+        setSiteThemes(newThemes);
+        localStorage.setItem('SITE_THEMES', JSON.stringify(newThemes));
+    };
 
     // Date Range State
     const [dateRange, setDateRange] = useState<{ startDate: Date | null; endDate: Date | null }>({
@@ -140,9 +157,11 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             items,
             projects,
             currentProject,
+            currentTheme,
             loading,
             refreshData: fetchData,
             setProject,
+            updateProjectTheme,
             dateRange,
             setDateRange,
             filteredInvoices,

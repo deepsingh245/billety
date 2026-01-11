@@ -78,7 +78,7 @@ function PieCenterLabel({ primaryText, secondaryText }: PieCenterLabelProps) {
 
 
 
-interface ChartUserByCountryProps {
+interface TopClientsChartProps {
   data: {
     name: string;
     value: number;
@@ -90,12 +90,12 @@ interface ChartUserByCountryProps {
   totalValue?: string;
 }
 
-export default function ChartUserByCountry({
+export default function TopClientsChart({
   data,
   title = "Users by country",
   totalLabel = "Total",
   totalValue = "100K",
-}: ChartUserByCountryProps) {
+}: TopClientsChartProps) {
 
   const pieData = data.map((item) => ({
     label: item.name,

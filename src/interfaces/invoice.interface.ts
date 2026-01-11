@@ -14,7 +14,8 @@ export interface Invoice {
   dueDate?: string;
   status: 'draft' | 'sent' | 'paid';
   totalAmount: number;
-  
+  templateId?: string;
+
   // Legacy fields support
   amount?: number;
   balance?: number;
