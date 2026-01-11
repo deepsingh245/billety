@@ -6,6 +6,7 @@ import { Client } from "../interfaces/client.interface";
 import { Invoice } from "../interfaces/invoice.interface";
 import { Item } from "../interfaces/item.interface";
 import { Project } from "../interfaces/project.interface";
+import i18n from '../i18n';
 
 const DUMMY_PROJECTS: Project[] = [
     { id: '1', name: 'Billety-web', category: 'Production', plan: 'Pro' },
@@ -13,6 +14,15 @@ const DUMMY_PROJECTS: Project[] = [
     { id: '3', name: 'Billety-admin', category: 'Development', plan: 'Enterprise' },
     { id: '4', name: 'Billety-store', category: 'Production', plan: 'Pro' },
 ];
+
+export interface Settings {
+    currency: string;
+    language: string;
+    notifications: {
+        email: boolean;
+        push: boolean;
+    };
+}
 
 interface DataContextType {
     clients: Client[];
@@ -26,6 +36,9 @@ interface DataContextType {
     dateRange: { startDate: Date | null; endDate: Date | null };
     setDateRange: (range: { startDate: Date | null; endDate: Date | null }) => void;
     filteredInvoices: Invoice[];
+    settings: Settings;
+    updateSettings: (newSettings: Partial<Settings>) => void;
+    addProject: (project: Project) => void;
 }
 
 const DataContext = createContext<DataContextType | undefined>(undefined);
@@ -36,7 +49,7 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const [items, setItems] = useState<Item[]>([]);
 
     // Project State
-    const [projects] = useState<Project[]>(DUMMY_PROJECTS);
+    const [projects, setProjects] = useState<Project[]>(DUMMY_PROJECTS);
     const [currentProject, setCurrentProject] = useState<Project | null>(DUMMY_PROJECTS[0]);
 
     // Date Range State
@@ -47,6 +60,16 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
     // Date Range State
     const [loading, setLoading] = useState<boolean>(true);
+
+    // Settings State
+    const [settings, setSettings] = useState<Settings>({
+        currency: 'USD',
+        language: 'en',
+        notifications: {
+            email: true,
+            push: true
+        }
+    });
 
     const fetchData = useCallback(async () => {
         setLoading(true);
@@ -70,6 +93,10 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     useEffect(() => {
         fetchData();
     }, [fetchData]);
+
+    useEffect(() => {
+        i18n.changeLanguage(settings.language);
+    }, [settings.language]);
 
     const setProject = (project: Project) => {
         setCurrentProject(project);
@@ -95,6 +122,17 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         });
     }, [invoices, dateRange]);
 
+    const updateSettings = (newSettings: Partial<Settings>) => {
+        setSettings(prev => ({
+            ...prev,
+            ...newSettings
+        }));
+    };
+
+    const addProject = (project: Project) => {
+        setProjects(prev => [...prev, project]);
+    };
+
     return (
         <DataContext.Provider value={{
             clients,
@@ -107,7 +145,10 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             setProject,
             dateRange,
             setDateRange,
-            filteredInvoices
+            filteredInvoices,
+            settings,
+            updateSettings,
+            addProject
         }}>
             {children}
         </DataContext.Provider>

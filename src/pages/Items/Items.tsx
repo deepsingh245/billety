@@ -144,7 +144,7 @@ function Items() {
         <DialogTitle id="add-item-dialog-title" sx={{ color: 'text.primary' }}>Add Item</DialogTitle>
         <DialogContent sx={{ color: 'text.secondary' }}>
           <Box sx={{ mt: 2 }}>
-            <AddItemForm onSuccess={handleSuccess} />
+            <AddItemForm onSuccess={handleSuccess} onClose={handleClose} />
           </Box>
         </DialogContent>
       </Dialog>

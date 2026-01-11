@@ -13,39 +13,48 @@ import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
+import { useTranslation } from 'react-i18next';
+import { useData } from "../../context/dataContext";
 
 export default function Settings() {
-    const [notificationsEmail, setNotificationsEmail] = React.useState(true);
-    const [notificationsPush, setNotificationsPush] = React.useState(true);
-    const [language, setLanguage] = React.useState("en");
-    const [currency, setCurrency] = React.useState("USD");
+    const { settings, updateSettings } = useData();
+    const { t } = useTranslation();
+
+    const handleNotificationChange = (type: 'email' | 'push', value: boolean) => {
+        updateSettings({
+            notifications: {
+                ...settings.notifications,
+                [type]: value
+            }
+        });
+    };
 
     return (
         <Box sx={{ width: "100%", maxWidth: { xs: "100%", md: "1700px" } }}>
             <Typography component="h2" variant="h6" sx={{ mb: 2 }}>
-                Settings
+                {t('settings.title')}
             </Typography>
             <Box sx={{ display: 'flex', flexDirection: { xs: 'column', md: 'row' }, gap: 3 }}>
                 <Box sx={{ flex: 1 }}>
                     <Card variant="outlined">
                         <CardContent>
                             <Typography variant="h6" sx={{ mb: 2 }}>
-                                Notifications
+                                {t('settings.notifications')}
                             </Typography>
                             <List>
                                 <ListItem>
-                                    <ListItemText primary="Email Notifications" secondary="Receive emails about your account activity" />
+                                    <ListItemText primary={t('settings.emailNotifications')} secondary={t('settings.emailNotificationsDesc')} />
                                     <Switch
-                                        checked={notificationsEmail}
-                                        onChange={(e) => setNotificationsEmail(e.target.checked)}
+                                        checked={settings.notifications.email}
+                                        onChange={(e) => handleNotificationChange('email', e.target.checked)}
                                     />
                                 </ListItem>
                                 <Divider />
                                 <ListItem>
-                                    <ListItemText primary="Push Notifications" secondary="Receive push notifications on your device" />
+                                    <ListItemText primary={t('settings.pushNotifications')} secondary={t('settings.pushNotificationsDesc')} />
                                     <Switch
-                                        checked={notificationsPush}
-                                        onChange={(e) => setNotificationsPush(e.target.checked)}
+                                        checked={settings.notifications.push}
+                                        onChange={(e) => handleNotificationChange('push', e.target.checked)}
                                     />
                                 </ListItem>
                             </List>
@@ -57,17 +66,17 @@ export default function Settings() {
                     <Card variant="outlined">
                         <CardContent>
                             <Typography variant="h6" sx={{ mb: 2 }}>
-                                General Preferences
+                                {t('settings.generalPreferences')}
                             </Typography>
                             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
                                 <FormControl fullWidth>
-                                    <InputLabel id="language-select-label">Language</InputLabel>
+                                    <InputLabel id="language-select-label">{t('settings.language')}</InputLabel>
                                     <Select
                                         labelId="language-select-label"
                                         id="language-select"
-                                        value={language}
-                                        label="Language"
-                                        onChange={(e) => setLanguage(e.target.value)}
+                                        value={settings.language}
+                                        label={t('settings.language')}
+                                        onChange={(e) => updateSettings({ language: e.target.value })}
                                     >
                                         <MenuItem value="en">English</MenuItem>
                                         <MenuItem value="es">Spanish</MenuItem>
@@ -77,13 +86,13 @@ export default function Settings() {
                                 </FormControl>
 
                                 <FormControl fullWidth>
-                                    <InputLabel id="currency-select-label">Currency</InputLabel>
+                                    <InputLabel id="currency-select-label">{t('settings.currency')}</InputLabel>
                                     <Select
                                         labelId="currency-select-label"
                                         id="currency-select"
-                                        value={currency}
-                                        label="Currency"
-                                        onChange={(e) => setCurrency(e.target.value)}
+                                        value={settings.currency}
+                                        label={t('settings.currency')}
+                                        onChange={(e) => updateSettings({ currency: e.target.value })}
                                     >
                                         <MenuItem value="USD">USD ($)</MenuItem>
                                         <MenuItem value="EUR">EUR (€)</MenuItem>

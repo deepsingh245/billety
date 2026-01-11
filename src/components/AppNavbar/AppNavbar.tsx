@@ -12,6 +12,7 @@ import ColorModeIconDropdown from '../../shared/ColorModeIconDropdown';
 import MenuButton from '../MenuButton/MenuButton';
 import SideMenuMobile from '../SideMenuMobile/SideMenuMobile';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 const Toolbar = styled(MuiToolbar)({
   width: '100%',
@@ -30,6 +31,7 @@ const Toolbar = styled(MuiToolbar)({
 });
 
 export default function AppNavbar() {
+  const { t } = useTranslation();
   const [open, setOpen] = React.useState(false);
 
   const toggleDrawer = (newOpen: boolean) => () => {
@@ -66,7 +68,7 @@ export default function AppNavbar() {
           >
             <CustomIcon />
             <Typography variant="h4" component="h1" sx={{ color: 'text.primary' }}>
-              Dashboard
+              {t('common.dashboard')}
             </Typography>
           </Stack>
           <ColorModeIconDropdown />

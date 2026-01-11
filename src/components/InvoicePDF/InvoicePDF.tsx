@@ -1,6 +1,7 @@
 import { Box, Typography, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Divider, Grid } from "@mui/material";
 import { Invoice } from "../../interfaces/invoice.interface";
 import { useData } from "../../context/dataContext";
+import { CURRENCY } from "../../constants/app.constants";
 
 interface InvoicePDFProps {
   invoice: Invoice;
@@ -8,6 +9,7 @@ interface InvoicePDFProps {
 
 export default function InvoicePDF({ invoice }: InvoicePDFProps) {
   const { currentProject } = useData();
+  const currency = useData().settings.currency;
 
   return (
     <Paper
@@ -81,17 +83,17 @@ export default function InvoicePDF({ invoice }: InvoicePDFProps) {
         <Box sx={{ width: '250px' }}>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
             <Typography variant="body2">Subtotal:</Typography>
-            <Typography variant="body2">₹{invoice.totalAmount.toFixed(2)}</Typography>
+            <Typography variant="body2">{`${CURRENCY[currency]}${invoice.totalAmount.toFixed(2)}`}</Typography>
           </Box>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
             <Typography variant="body2">Tax (0%):</Typography>
-            <Typography variant="body2">₹0.00</Typography>
+            <Typography variant="body2">{`${CURRENCY[currency]}0.00`}</Typography>
           </Box>
           <Divider sx={{ my: 1 }} />
           <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
             <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>Total:</Typography>
             <Typography variant="subtitle1" sx={{ fontWeight: 'bold', color: '#1976d2' }}>
-              ₹{invoice.totalAmount.toFixed(2)}
+              {`${CURRENCY[currency]}${invoice.totalAmount.toFixed(2)}`}
             </Typography>
           </Box>
         </Box>

@@ -8,9 +8,11 @@ import PageViewsBarChart from '../PageViewsBarChart/PageViewsBarChart';
 import SessionsChart from '../SessionsChart/SessionsChart';
 import StatCard, { StatCardProps } from '../StatCard/StatCard';
 import { useData } from '../../context/dataContext';
+import { APP_CONSTANTS, CURRENCY } from '../../constants/app.constants';
 
 export default function MainGrid() {
   const { clients, invoices, items } = useData();
+  const currency = useData().settings.currency;
 
   const data: StatCardProps[] = [
     {
@@ -67,7 +69,7 @@ export default function MainGrid() {
         <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
           <StatCard
             title="Revenue (Est)"
-            value={`₹${invoices.reduce((acc, curr) => acc + (curr.totalAmount || 0), 0).toFixed(0)}`}
+            value={`${CURRENCY[currency]}${invoices.reduce((acc, curr) => acc + (curr.totalAmount || 0), 0).toFixed(0)}`}
             interval="All time"
             trend="neutral"
             data={invoiceTrendData.length > 0 ? invoiceTrendData : [0]}

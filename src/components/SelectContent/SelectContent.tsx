@@ -29,7 +29,7 @@ const ListItemAvatar = styled(MuiListItemAvatar)({
 });
 
 export default function SelectContent() {
-  const { projects, currentProject, setProject } = useData();
+  const { projects, currentProject, setProject, refreshData } = useData();
 
   const handleChange = (event: SelectChangeEvent) => {
     const selectedId = event.target.value as string;
@@ -40,6 +40,7 @@ export default function SelectContent() {
     const project = projects.find(p => p.id === selectedId);
     if (project) {
       setProject(project);
+      refreshData();
     }
   };
 
@@ -97,13 +98,13 @@ export default function SelectContent() {
         ))
       ])}
 
-      <Divider sx={{ mx: -1 }} />
+      {/* <Divider sx={{ mx: -1 }} />
       <MenuItem value="add-new">
         <ListItemIcon>
           <AddRoundedIcon />
         </ListItemIcon>
         <ListItemText primary="Add product" secondary="Create new workspace" />
-      </MenuItem>
+      </MenuItem> */}
     </Select>
   );
 }

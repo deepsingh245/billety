@@ -42,3 +42,11 @@ export const CHIP_VARIANT = {
         borderColor: "orange",
     },
 };
+
+export const CURRENCY = {
+    USD: "$",
+    EUR: "€",
+    INR: "₹",
+    GBP: "£",
+};
+

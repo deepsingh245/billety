@@ -16,14 +16,19 @@ import { APP_CONSTANTS } from "../../constants/app.constants";
 
 interface AddItemFormProps {
   onSuccess?: () => void;
+  onClose?: () => void;
 }
 
-export default function AddItemForm({ onSuccess }: AddItemFormProps) {
+export default function AddItemForm({ onSuccess, onClose }: AddItemFormProps) {
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<Item>();
+
+  const handleClose = () => {
+    if (onClose) onClose();
+  };
 
   const onSubmit = async (data: Item) => {
     GlobalUIService.setLoading(true);
@@ -143,8 +148,11 @@ export default function AddItemForm({ onSuccess }: AddItemFormProps) {
           </FormControl>
         </Grid>
 
-        <Grid size={{ xs: 12 }}>
-          <Button type="submit" variant="contained" color="primary" sx={{ color: 'white' }}>
+        <Grid container spacing={2}>
+          <Button onClick={handleClose} variant="outlined" color="primary">
+            Cancel
+          </Button>
+          <Button type="submit" variant="contained" color="primary">
             Submit Item
           </Button>
         </Grid>
