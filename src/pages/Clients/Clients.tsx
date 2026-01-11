@@ -10,12 +10,14 @@ import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import DialogContent from "@mui/material/DialogContent";
 import AddClientForm from "../../components/AddClientForm/AddClientForm";
-import { colorSchemes } from "../../shared/themePrimitives";
 import { GlobalUIService } from "../../utils/GlobalUIService";
 import { useData } from "../../context/dataContext";
+import { useAuth } from "../../context/AuthContext";
+import { getUserCollectionPath } from "../../utils/firestorePath.utils";
 import DeleteIcon from '@mui/icons-material/Delete';
 import { deleteDocument, deleteDocumentsBatch } from "../../firebase/firebaseUtils";
 import { APP_CONSTANTS } from "../../constants/app.constants";
+import BulkUploadModal from "../../components/BulkUploadModal/BulkUploadModal";
 // import CustomizedTreeView from "../../components/CustomizedTreeView/CustomizedTreeView";
 
 const columns: GridColDef[] = [
@@ -50,7 +52,9 @@ import ConfirmationDialog from "../../components/ConfirmationDialog/Confirmation
 
 const Clients = () => {
   const { clients, loading, refreshData } = useData();
+  const { user } = useAuth();
   const [open, setOpen] = React.useState(false);
+  const [uploadModalOpen, setUploadModalOpen] = React.useState(false);
   const [confirmOpen, setConfirmOpen] = React.useState(false);
   const [selectedClients, setSelectedClients] = React.useState<any[]>([]);
 
@@ -70,11 +74,12 @@ const Clients = () => {
     setConfirmOpen(false);
     GlobalUIService.setLoading(true);
     const ids = selectedClients;
+    if (!user) return;
     try {
       if (ids.length === 1) {
-        await deleteDocument(APP_CONSTANTS.COLLECTIONS.CLIENTS, ids[0]);
+        await deleteDocument(getUserCollectionPath(user.uid, APP_CONSTANTS.COLLECTIONS.CLIENTS), ids[0]);
       } else if (ids.length > 1) {
-        await deleteDocumentsBatch(APP_CONSTANTS.COLLECTIONS.CLIENTS, ids);
+        await deleteDocumentsBatch(getUserCollectionPath(user.uid, APP_CONSTANTS.COLLECTIONS.CLIENTS), ids);
       }
     } catch (error) {
       console.error("Error deleting clients:", error);
@@ -86,19 +91,26 @@ const Clients = () => {
   };
 
   return (
-    <Stack width={"100%"}>
-      <Stack
-        spacing={2}
-        direction={"row"}
-        marginY={2}
-        display={"flex"}
-        justifyContent={"space-between"}
-        alignItems={"center"}
-      >
+    <Stack
+      spacing={2}
+      direction={"column"}
+      marginY={2}
+      display={"flex"}
+      justifyContent={"space-between"}
+      alignItems={"center"}
+    >
+      <Stack direction={"row"} justifyContent={"space-between"} alignItems={"center"} width={'100%'}>
         <Typography component="h2" variant="h6" sx={{ mb: 2 }}>
           Details
         </Typography>
         <Stack direction={"row"} spacing={2}>
+          <Button
+            variant="outlined"
+            onClick={() => setUploadModalOpen(true)}
+            sx={{ width: "fit-content" }}
+          >
+            Bulk Upload
+          </Button>
           <Button
             variant="outlined"
             onClick={handleClickOpen}
@@ -124,6 +136,11 @@ const Clients = () => {
         onConfirm={handleDelete}
         onClose={() => setConfirmOpen(false)}
         confirmText="Delete"
+      />
+      <BulkUploadModal
+        open={uploadModalOpen}
+        onClose={() => setUploadModalOpen(false)}
+        type="client"
       />
       <Dialog
         open={open}

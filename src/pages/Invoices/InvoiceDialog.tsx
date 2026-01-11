@@ -47,6 +47,8 @@ import { CustomAutocomplete } from "../../components/CustomAutocomplete/CustomAu
 import { useData } from "../../context/dataContext";
 
 
+import { useAuth } from "../../context/AuthContext";
+import { getUserCollectionPath } from "../../utils/firestorePath.utils";
 import TemplateSelectionModal from "../../components/InvoicePDF/TemplateSelectionModal";
 import TemplatePreviewDialog from "../../components/InvoicePDF/TemplatePreviewDialog";
 
@@ -65,6 +67,7 @@ export default function InvoiceDialog({
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
   const { refreshData } = useData();
+  const { user } = useAuth();
   const [activeStep, setActiveStep] = useState(0);
   const [clients, setClients] = useState<Client[]>([]);
   const [items, setItems] = useState<Item[]>([]);
@@ -84,16 +87,17 @@ export default function InvoiceDialog({
   const [previewTemplateId, setPreviewTemplateId] = useState<string>('standard');
 
   useEffect(() => {
-    if (open) {
+    if (open && user) {
       fetchData();
     }
-  }, [open]);
+  }, [open, user]);
 
   const fetchData = async () => {
+    if (!user) return;
     try {
       const [clientsData, itemsData] = await Promise.all([
-        getAllDocuments<Client>(APP_CONSTANTS.COLLECTIONS.CLIENTS),
-        getAllDocuments<Item>(APP_CONSTANTS.COLLECTIONS.ITEMS),
+        getAllDocuments<Client>(getUserCollectionPath(user.uid, APP_CONSTANTS.COLLECTIONS.CLIENTS)),
+        getAllDocuments<Item>(getUserCollectionPath(user.uid, APP_CONSTANTS.COLLECTIONS.ITEMS)),
       ]);
       setClients(clientsData);
       setItems(itemsData);
@@ -133,7 +137,7 @@ export default function InvoiceDialog({
   };
 
   const handleCreateInvoice = async () => {
-    if (!selectedClient || invoiceItems.length === 0) return;
+    if (!selectedClient || invoiceItems.length === 0 || !user) return;
 
     GlobalUIService.setLoading(true);
     try {
@@ -146,7 +150,7 @@ export default function InvoiceDialog({
         templateId: selectedTemplateId,
       };
 
-      const docRef = await createDocument(APP_CONSTANTS.COLLECTIONS.INVOICES, newInvoice);
+      const docRef = await createDocument(getUserCollectionPath(user.uid, APP_CONSTANTS.COLLECTIONS.INVOICES), newInvoice);
       await refreshData();
       GlobalUIService.setLoading(false);
       onClose();

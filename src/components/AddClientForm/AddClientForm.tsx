@@ -11,6 +11,9 @@ import Stack from "@mui/material/Stack";
 import { Client } from "../../interfaces/client.interface";
 import { createDocument } from "../../firebase/firebaseUtils";
 import { GlobalUIService } from "../../utils/GlobalUIService";
+import { useAuth } from "../../context/AuthContext";
+import { getUserCollectionPath } from "../../utils/firestorePath.utils";
+import { APP_CONSTANTS } from "../../constants/app.constants";
 
 interface AddClientFormProps {
   onSuccess?: () => void;
@@ -18,6 +21,7 @@ interface AddClientFormProps {
 }
 
 export default function AddClientForm({ onSuccess, onCancel }: AddClientFormProps) {
+  const { user } = useAuth();
   const {
     register,
     handleSubmit,
@@ -27,10 +31,14 @@ export default function AddClientForm({ onSuccess, onCancel }: AddClientFormProp
   const onSubmit = async (data: Client) => {
     GlobalUIService.setLoading(true);
     console.log(JSON.stringify(data, null, 2));
-    await createDocument("clients", data);
-    GlobalUIService.setLoading(false);
-    if (onSuccess) {
-      onSuccess();
+    try {
+      if (!user) return;
+      await createDocument(getUserCollectionPath(user.uid, APP_CONSTANTS.COLLECTIONS.CLIENTS), data);
+      GlobalUIService.setLoading(false);
+      if (onSuccess) onSuccess();
+    } catch (error) {
+      console.error("Error creating client:", error);
+      GlobalUIService.setLoading(false);
     }
   };
 

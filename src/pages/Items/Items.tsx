@@ -5,6 +5,8 @@ import Stack from "@mui/material/Stack";
 import { GridColDef } from "@mui/x-data-grid";
 import { Button } from "@mui/material";
 import { useData } from "../../context/dataContext";
+import { useAuth } from "../../context/AuthContext";
+import { getUserCollectionPath } from "../../utils/firestorePath.utils";
 import { useEffect, useState } from "react";
 import { GlobalUIService } from "../../utils/GlobalUIService";
 import Dialog from "@mui/material/Dialog";
@@ -16,6 +18,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { deleteDocument, deleteDocumentsBatch } from "../../firebase/firebaseUtils";
 import { APP_CONSTANTS } from "../../constants/app.constants";
 import ConfirmationDialog from "../../components/ConfirmationDialog/ConfirmationDialog";
+import BulkUploadModal from "../../components/BulkUploadModal/BulkUploadModal";
 
 const columns: GridColDef[] = [
   { field: "name", headerName: "Name", flex: 1.5, minWidth: 200 },
@@ -53,7 +56,9 @@ const columns: GridColDef[] = [
 
 function Items() {
   const { items, loading, refreshData } = useData();
+  const { user } = useAuth();
   const [open, setOpen] = useState(false);
+  const [uploadModalOpen, setUploadModalOpen] = useState(false);
   const [selectedItems, setSelectedItems] = useState<any[]>([]);
   const [confirmOpen, setConfirmOpen] = useState(false);
 
@@ -61,11 +66,12 @@ function Items() {
     setConfirmOpen(false);
     GlobalUIService.setLoading(true);
     const ids = selectedItems.map(i => i.id);
+    if (!user) return;
     try {
       if (ids.length === 1) {
-        await deleteDocument(APP_CONSTANTS.COLLECTIONS.ITEMS, ids[0]);
+        await deleteDocument(getUserCollectionPath(user.uid, APP_CONSTANTS.COLLECTIONS.ITEMS), ids[0]);
       } else if (ids.length > 1) {
-        await deleteDocumentsBatch(APP_CONSTANTS.COLLECTIONS.ITEMS, ids);
+        await deleteDocumentsBatch(getUserCollectionPath(user.uid, APP_CONSTANTS.COLLECTIONS.ITEMS), ids);
       }
     } catch (error) {
       console.error("Error deleting items:", error);
@@ -109,6 +115,13 @@ function Items() {
         <Stack direction="row" spacing={2}>
           <Button
             variant="outlined"
+            onClick={() => setUploadModalOpen(true)}
+            sx={{ width: "fit-content" }}
+          >
+            Bulk Upload
+          </Button>
+          <Button
+            variant="outlined"
             onClick={handleClickOpen}
             sx={{ width: "fit-content" }}
           >
@@ -148,6 +161,12 @@ function Items() {
           </Box>
         </DialogContent>
       </Dialog>
+
+      <BulkUploadModal
+        open={uploadModalOpen}
+        onClose={() => setUploadModalOpen(false)}
+        type="item"
+      />
 
       <Grid container spacing={2} columns={12}>
         <Grid size={{ xs: 12, lg: 12 }}>

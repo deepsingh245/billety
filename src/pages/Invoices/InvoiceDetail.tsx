@@ -36,10 +36,13 @@ import { sendInvoiceEmail } from "../../utils/email.utils";
 import AddIcon from "@mui/icons-material/Add";
 import TemplateSelectionModal from "../../components/InvoicePDF/TemplateSelectionModal";
 import TemplatePreviewDialog from "../../components/InvoicePDF/TemplatePreviewDialog";
+import { useAuth } from "../../context/AuthContext";
+import { getUserCollectionPath } from "../../utils/firestorePath.utils";
 
 export default function InvoiceDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { user } = useAuth();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
@@ -59,15 +62,16 @@ export default function InvoiceDetail() {
 
   useEffect(() => {
     fetchData();
-  }, [id]);
+  }, [id, user]);
 
   const fetchData = async () => {
+    if (!user) return;
     try {
       GlobalUIService.setLoading(true);
       const [invoiceData, clientsData, itemsData] = await Promise.all([
-        getDocument<Invoice>(APP_CONSTANTS.COLLECTIONS.INVOICES, id!),
-        getAllDocuments<Client>(APP_CONSTANTS.COLLECTIONS.CLIENTS),
-        getAllDocuments<Item>(APP_CONSTANTS.COLLECTIONS.ITEMS),
+        getDocument<Invoice>(getUserCollectionPath(user.uid, APP_CONSTANTS.COLLECTIONS.INVOICES), id!),
+        getAllDocuments<Client>(getUserCollectionPath(user.uid, APP_CONSTANTS.COLLECTIONS.CLIENTS)),
+        getAllDocuments<Item>(getUserCollectionPath(user.uid, APP_CONSTANTS.COLLECTIONS.ITEMS)),
       ]);
 
       if (invoiceData) {
@@ -83,13 +87,13 @@ export default function InvoiceDetail() {
   };
 
   const handleUpdateInvoice = async () => {
-    if (!invoice || !id) return;
+    if (!invoice || !id || !user) return;
 
     GlobalUIService.setLoading(true);
     try {
-      await updateDocument(APP_CONSTANTS.COLLECTIONS.INVOICES, id, invoice);
+      await updateDocument(getUserCollectionPath(user.uid, APP_CONSTANTS.COLLECTIONS.INVOICES), id, invoice);
       GlobalUIService.setLoading(false);
-      GlobalUIService.showToast(APP_CONSTANTS.MESSAGES.SAVE_SUCCESS);
+      GlobalUIService.showSuccess(APP_CONSTANTS.MESSAGES.SAVE_SUCCESS);
     } catch (error) {
       handleError(error, "Error updating invoice");
       GlobalUIService.setLoading(false);
@@ -164,13 +168,13 @@ export default function InvoiceDetail() {
 
   const handleSendEmail = async () => {
     if (!invoice?.client?.email) {
-      GlobalUIService.showToast("Client email is missing!");
+      GlobalUIService.showError("Client email is missing!");
       return;
     }
     GlobalUIService.setLoading(true);
     try {
       await sendInvoiceEmail(invoice.client.email, id!);
-      GlobalUIService.showToast(`Invoice sent to ${invoice.client.email}`);
+      GlobalUIService.showSuccess(`Invoice sent to ${invoice.client.email}`);
     } catch (error) {
       handleError(error, "Failed to send email");
     } finally {

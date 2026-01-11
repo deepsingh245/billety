@@ -30,7 +30,7 @@ export const exportToPDF = async (elementId: string, fileName: string = 'documen
         return true;
     } catch (error) {
         console.error('Error generating PDF:', error);
-        GlobalUIService.showToast('Failed to generate PDF');
+        GlobalUIService.showError('Failed to generate PDF');
         return false;
     }
 };

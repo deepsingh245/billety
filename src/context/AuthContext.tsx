@@ -7,6 +7,7 @@ import {
 } from "react";
 import { User } from "firebase/auth";
 import { onAuthChange, logoutUser } from "../firebase/auth";
+import { initializeUserData } from "../firebase/firebaseUtils";
 
 type AuthContextType = {
     user: User | null;
@@ -29,7 +30,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const unsubscribe = onAuthChange((currentUser) => {
+        const unsubscribe = onAuthChange(async (currentUser) => {
+            if (currentUser) {
+                await initializeUserData(currentUser);
+            }
             setUser(currentUser);
             setLoading(false);
         });
