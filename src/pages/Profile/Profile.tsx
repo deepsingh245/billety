@@ -27,7 +27,7 @@ import { useData } from "../../context/dataContext";
 import { Project } from "../../interfaces/project.interface";
 import { indexedDBService } from "../../services/indexedDB.service";
 import { useRef } from "react";
-import CustomTextField from "../../components/CustomTeztField";
+import CustomTextField from "../../components/CustomTextField";
 
 export default function Profile() {
     const { t } = useTranslation();
@@ -251,8 +251,9 @@ export default function Profile() {
                                     disabled={!isEditing}
                                     fullWidth
                                     size="small"
+
                                 />
-                                <CustomTextField
+                                <TextField
                                     label={t('profile.companyAddress')}
                                     value={address}
                                     onChange={(e) => setAddress(e.target.value)}

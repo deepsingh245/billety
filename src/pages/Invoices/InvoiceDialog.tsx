@@ -494,7 +494,7 @@ export default function InvoiceDialog({
               onClick={handleNext}
               disabled={activeStep === 0 ? !selectedClient : invoiceItems.length === 0}
               endIcon={<NavigateNextIcon />}
-              sx={{ height: 40, color: `${activeStep === 0 ? !selectedClient : invoiceItems.length === 0 ? 'gray !important' : 'theme.palette.primary.contrastText !important'}` }}
+              sx={{ height: 40, color: `${(activeStep === 0 ? !selectedClient : invoiceItems.length === 0) ? 'gray !important' : 'theme.palette.primary.contrastText !important'}` }}
             >
               Next Step
             </Button>

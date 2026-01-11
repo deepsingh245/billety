@@ -179,11 +179,12 @@ export default function InvoiceDetail() {
       <Divider sx={{ mb: 2 }} />
 
       <Box sx={{ mb: 4 }}>
-        <Typography variant="subtitle2" gutterBottom>Client Details</Typography>
+        <Typography sx={{ mb: 2 }} variant="subtitle2" gutterBottom>Client Details</Typography>
         <CustomAutocomplete
           options={clients}
           getOptionLabel={(option: Client) => option.name || ""}
           value={invoice.client}
+          disabled
           // isOptionEqualToValue={(option, value) => option?.id === value?.id}
           onChange={(newValue) => handleClientChange(newValue)}
           label="Select Client"

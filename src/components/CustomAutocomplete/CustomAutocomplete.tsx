@@ -21,12 +21,14 @@ export function CustomAutocomplete<T>({
     renderOptionContent,
     label,
     placeholder,
+    disabled,
     sx = {}
 }: CustomAutocompleteProps<T>) {
     return (
         <Autocomplete
             options={options}
             autoHighlight
+            disabled={disabled}
             popupIcon={<ExpandMoreIcon />}
             clearIcon={<CloseIcon fontSize="small" />}
             getOptionLabel={getOptionLabel}
