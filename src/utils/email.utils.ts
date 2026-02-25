@@ -12,7 +12,6 @@ export const sendInvoiceEmail = async (
     return new Promise((resolve) => {
         // Simulate network delay
         setTimeout(() => {
-            console.log(`Sending invoice ${invoiceId} to ${email}`, pdfBlob);
             // In a real app, you would attach the PDF blob to the email request here.
             resolve(true);
         }, 1500);

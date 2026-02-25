@@ -8,12 +8,15 @@ import PageViewsBarChart from '../PageViewsBarChart/PageViewsBarChart';
 import SessionsChart from '../SessionsChart/SessionsChart';
 import StatCard, { StatCardProps } from '../StatCard/StatCard';
 import { useData } from '../../context/dataContext';
-import { APP_CONSTANTS, CURRENCY } from '../../constants/app.constants';
+import { CURRENCY } from '../../constants/app.constants';
+import ProjectCreationDialog from '../ProjectCreationDialog/ProjectCreationDialog';
 
 export default function MainGrid() {
   const theme = useTheme();
   const { clients, invoices, items } = useData();
   const currency = useData().settings.currency;
+  const projects = useData().projects;
+
 
   const data: StatCardProps[] = [
     {
@@ -61,64 +64,71 @@ export default function MainGrid() {
   }));
 
   return (
-    <Box sx={{ width: '100%', maxWidth: { sm: '100%', md: '1700px' } }}>
-      {/* cards */}
-      <Typography component="h2" variant="h6" sx={{ mb: 2 }}>
-        Overview
-      </Typography>
-      <Grid container spacing={2} columns={12} sx={{ mb: (theme) => theme.spacing(2) }}>
-        {data.map((card, index) => (
-          <Grid key={index} size={{ xs: 12, sm: 6, lg: 3 }}>
-            <StatCard {...card} />
+    <>
+      {!projects.length && <ProjectCreationDialog />}
+
+      <Box sx={{ width: "100%", maxWidth: { sm: "100%", md: "1700px" } }}>
+        {/* cards */}
+        <Typography component="h2" variant="h6" sx={{ mb: 2 }}>
+          Overview
+        </Typography>
+        <Grid
+          container
+          spacing={2}
+          columns={12}
+          sx={{ mb: (theme) => theme.spacing(2) }}
+        >
+          {data.map((card, index) => (
+            <Grid key={index} size={{ xs: 12, sm: 6, lg: 3 }}>
+              <StatCard {...card} />
+            </Grid>
+          ))}
+          <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
+            <StatCard
+              title="Revenue (Est)"
+              value={`${CURRENCY[currency]}${invoices.reduce((acc, curr) => acc + (curr.totalAmount || 0), 0).toFixed(0)}`}
+              interval="All time"
+              trend="neutral"
+              data={invoiceTrendData.length > 0 ? invoiceTrendData : [0]}
+            />
           </Grid>
-        ))}
-        <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
-          <StatCard
-            title="Revenue (Est)"
-            value={`${CURRENCY[currency]}${invoices.reduce((acc, curr) => acc + (curr.totalAmount || 0), 0).toFixed(0)}`}
-            interval="All time"
-            trend="neutral"
-            data={invoiceTrendData.length > 0 ? invoiceTrendData : [0]}
-          />
         </Grid>
-      </Grid>
-      <Typography component="h2" variant="h6" sx={{ mb: 2 }}>
-        Details
-      </Typography>
-      <Grid container spacing={2} columns={12}>
-        <Grid size={{ xs: 12, lg: 9 }}>
-          <SessionsChart
-            title="Invoice Values"
-            subtitle="Value of recent invoices"
-            total={invoices.length.toString()}
-            trend=""
-            trendColor="default"
-            data={invoiceTrendData.length > 0 ? invoiceTrendData : [0]}
-            labels={invoiceLabels.length > 0 ? invoiceLabels : ["0"]}
-          />
+        <Typography component="h2" variant="h6" sx={{ mb: 2 }}>
+          Details
+        </Typography>
+        <Grid container spacing={2} columns={12}>
+          <Grid size={{ xs: 12, lg: 9 }}>
+            <SessionsChart
+              title="Invoice Values"
+              subtitle="Value of recent invoices"
+              total={invoices.length.toString()}
+              trend=""
+              trendColor="default"
+              data={invoiceTrendData.length > 0 ? invoiceTrendData : [0]}
+              labels={invoiceLabels.length > 0 ? invoiceLabels : ["0"]}
+            />
+          </Grid>
+          <Grid size={{ xs: 12, lg: 3 }}>
+            <TopClientsChart
+              title="Top Clients"
+              totalLabel="Clients"
+              totalValue={clients.length.toString()}
+              data={topClients}
+            />
+          </Grid>
+          <Grid size={{ xs: 12, lg: 12 }}>
+            <PageViewsBarChart
+              title="Item Rates"
+              subtitle="Rates of top items"
+              total={items.length.toString() + " Items"}
+              trend=""
+              trendColor="default"
+              xAxisLabels={itemNames}
+              series={[{ id: "rate", label: "Rate", data: itemRates }]}
+            />
+          </Grid>
         </Grid>
-        <Grid size={{ xs: 12, lg: 3 }}>
-          <TopClientsChart
-            title="Top Clients"
-            totalLabel="Clients"
-            totalValue={clients.length.toString()}
-            data={topClients}
-          />
-        </Grid>
-        <Grid size={{ xs: 12, lg: 12 }}>
-          <PageViewsBarChart
-            title="Item Rates"
-            subtitle="Rates of top items"
-            total={items.length.toString() + " Items"}
-            trend=""
-            trendColor="default"
-            xAxisLabels={itemNames}
-            series={[
-              { id: 'rate', label: 'Rate', data: itemRates }
-            ]}
-          />
-        </Grid>
-      </Grid>
-    </Box>
+      </Box>
+    </>
   );
 }

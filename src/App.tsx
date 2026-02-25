@@ -6,7 +6,6 @@ import { GlobalUIProvider } from "./context/globalUIContext";
 import { DataProvider } from "./context/dataContext";
 import { AuthProvider } from "./context/AuthContext";
 import { ErrorBoundary } from "./components/ErrorBoundary/ErrorBoundary";
-import ProjectCreationDialog from "./components/ProjectCreationDialog/ProjectCreationDialog";
 import ThemeWrapper from "./components/ThemeWrapper/ThemeWrapper";
 function RoutesWrapper() {
   const element = useRoutes(routes);
@@ -22,7 +21,6 @@ function App() {
             <DataProvider>
               <ThemeWrapper>
                 <RoutesWrapper />
-                <ProjectCreationDialog />
               </ThemeWrapper>
             </DataProvider>
           </AuthProvider>

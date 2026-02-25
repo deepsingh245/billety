@@ -215,10 +215,8 @@ export async function initializeUserData(user: any): Promise<void> {
         createdAt: serverTimestamp(),
         defaultTemplateId: null, // Default to null, let app logic handle fallback
       });
-      console.log(`User document created for ${user.uid}`);
     } else {
       // User exists, do nothing
-      // console.log(`User document already exists for ${user.uid}`);
     }
   } catch (error) {
     console.error("Error initializing user data:", error);

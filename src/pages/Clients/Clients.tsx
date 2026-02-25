@@ -178,6 +178,7 @@ const Clients = () => {
             columns={columns}
             rows={clients}
             checkboxSelection
+            sx={{ width: '100%'}}
             onRowSelectionModelChange={({ ids }: any) => {
               const clientIds = Array.from(ids);
               setSelectedClients(clientIds);

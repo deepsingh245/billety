@@ -191,7 +191,6 @@ const Invoices = () => {
           }))}
             disableRowSelectionOnClick
             onRowSelectionModelChange={(ids: any) => {
-              console.log("🚀 ~ Invoices ~ ids:", ids)
               const selectedRows = Array.from<string>(ids.ids);
               setSelectedInvoices(selectedRows);
             }}

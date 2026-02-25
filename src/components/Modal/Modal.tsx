@@ -20,7 +20,6 @@ const BootstrapDialog = styled(Dialog)(({ theme }) => ({
 
 export default function CustomizedModal({ trigger }) {
   const [open, setOpen] = React.useState(false);
-  console.log("🚀 ~ CustomizedModal ~ open:", open);
 
   const handleClose = () => {
     setOpen(trigger);

@@ -14,6 +14,7 @@ export default function CustomizedDataGrid(props: DataGridProps) {
       initialState={{
         pagination: { paginationModel: { pageSize: 20 } },
       }}
+      sx={{ width: '100%'}}
       pageSizeOptions={[10, 20, 50]}
       density="compact"
       slotProps={{

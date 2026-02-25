@@ -30,7 +30,6 @@ export default function AddClientForm({ onSuccess, onCancel }: AddClientFormProp
 
   const onSubmit = async (data: Client) => {
     GlobalUIService.setLoading(true);
-    console.log(JSON.stringify(data, null, 2));
     try {
       if (!user) return;
       await createDocument(getUserCollectionPath(user.uid, APP_CONSTANTS.COLLECTIONS.CLIENTS), data);
