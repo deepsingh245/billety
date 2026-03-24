@@ -9,35 +9,34 @@ import {
   Button,
   IconButton,
   Stack,
-  // Autocomplete,
   Divider,
   Tabs,
   Tab,
   useMediaQuery,
   useTheme,
 } from "@mui/material";
-import { CustomAutocomplete } from "../../components/CustomAutocomplete/CustomAutocomplete";
-import { GlobalUIService } from "../../utils/GlobalUIService";
-import { getDocument, updateDocument, getAllDocuments } from "../../firebase/firebaseUtils";
-import { APP_CONSTANTS } from "../../constants/app.constants";
-import { ROUTES } from "../../constants/routes.constants";
-import { handleError } from "../../utils/error.utils";
-import { Invoice, InvoiceItem } from "../../interfaces/invoice.interface";
-import { Client } from "../../interfaces/client.interface";
-import { Item } from "../../interfaces/item.interface";
-import InvoicePDF from "../../components/InvoicePDF/InvoicePDF";
 import DeleteIcon from "@mui/icons-material/Delete";
 import SaveIcon from "@mui/icons-material/Save";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import DownloadIcon from "@mui/icons-material/Download";
 import SendIcon from "@mui/icons-material/Send";
-import { exportToPDF } from "../../utils/pdf.utils";
-import { sendInvoiceEmail } from "../../utils/email.utils";
 import AddIcon from "@mui/icons-material/Add";
+import { CustomAutocomplete } from "../../components/CustomAutocomplete/CustomAutocomplete";
+import InvoicePDF from "../../components/InvoicePDF/InvoicePDF";
 import TemplateSelectionModal from "../../components/InvoicePDF/TemplateSelectionModal";
 import TemplatePreviewDialog from "../../components/InvoicePDF/TemplatePreviewDialog";
+import { GlobalUIService } from "../../utils/GlobalUIService";
+import { getDocument, updateDocument, getAllDocuments } from "../../firebase/firebaseUtils";
+import { exportToPDF } from "../../utils/pdf.utils";
+import { handleError } from "../../utils/error.utils";
 import { useAuth } from "../../context/AuthContext";
 import { getUserCollectionPath } from "../../utils/firestorePath.utils";
+import { APP_CONSTANTS } from "../../constants/app.constants";
+import { ROUTES } from "../../constants/routes.constants";
+import { Invoice, InvoiceItem } from "../../interfaces/invoice.interface";
+import { Client } from "../../interfaces/client.interface";
+import { Item } from "../../interfaces/item.interface";
+import { sendInvoiceEmailWithPDF } from "../../services/emailHelper.service";
 
 export default function InvoiceDetail() {
   const { id } = useParams();
@@ -171,10 +170,32 @@ export default function InvoiceDetail() {
       GlobalUIService.showError("Client email is missing!");
       return;
     }
+
     GlobalUIService.setLoading(true);
     try {
-      await sendInvoiceEmail(invoice.client.email, id!);
+      const element = document.getElementById('invoice-preview');
+      if (!element) {
+        throw new Error("Invoice preview not found");
+      }
+
+      // Use helper service to send email with PDF
+      await sendInvoiceEmailWithPDF(
+        invoice,
+        invoice.client.email,
+        element
+      );
+
       GlobalUIService.showSuccess(`Invoice sent to ${invoice.client.email}`);
+
+      // Update invoice status to sent
+      if (id && user) {
+        await updateDocument(
+          getUserCollectionPath(user.uid, APP_CONSTANTS.COLLECTIONS.INVOICES),
+          id,
+          { ...invoice, status: 'sent' }
+        );
+        setInvoice({ ...invoice, status: 'sent' });
+      }
     } catch (error) {
       handleError(error, "Failed to send email");
     } finally {
