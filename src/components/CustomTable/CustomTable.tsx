@@ -42,8 +42,8 @@ export default function CustomTable({
   const [rowsPerPage, setRowsPerPage] = React.useState(pageSize);
   const [selectedRows, setSelectedRows] = React.useState<any[]>([]);
 
-  const handleChangePage = (event: unknown, newPage: number) => {
-    console.log("🚀 ~ handleChangePage ~ event:", event)
+  const handleChangePage = (event: any, newPage: number) => {
+    event.preventDefault();
     setPage(newPage);
   };
 

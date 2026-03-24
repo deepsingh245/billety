@@ -1,4 +1,4 @@
-import { Stepper, Step, StepLabel, Box, Button } from '@mui/material';
+import { Stepper, Step, StepLabel, Box } from '@mui/material';
 
 export const StepRenderer = ({ steps, renderField }: any) => {
     return (

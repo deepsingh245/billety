@@ -1,4 +1,4 @@
-import { FormControl, FormLabel, FormHelperText, Checkbox, FormControlLabel } from '@mui/material';
+import { FormControl, FormHelperText, Checkbox, FormControlLabel } from '@mui/material';
 import CustomTextField from '../CustomTextField';
 export const FieldComponents = {
   text: ({ error, label, required, placeholder, value, onChange, ...props }: any) => (

@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useForm, useWatch } from 'react-hook-form';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
 
 export const useFormEngine = ({ config, defaultValues, validationMode }: any) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -24,7 +24,7 @@ export const useFormEngine = ({ config, defaultValues, validationMode }: any) =>
     isSubmitSuccessful: form.formState.isSubmitSuccessful || isSubmitSuccessful,
     handleChange: (id: string, val: any) => form.setValue(id, val, { shouldValidate: true }),
     handleBlur: (id: string) => form.trigger(id),
-    handleFocus: (id: string) => {},
+    handleFocus: (_id: string) => {},
     handleSubmit: form.handleSubmit(async (data) => {
       setIsSubmitting(true);
       if(config.submit?.onSubmit) {
@@ -41,7 +41,7 @@ export const useFormEngine = ({ config, defaultValues, validationMode }: any) =>
     resetForm: form.reset,
     setFieldValue: form.setValue,
     validateForm: async () => form.trigger(),
-    getFieldState: (id: string) => ({ visible: true, disabled: false, readOnly: false, required: false }),
+    getFieldState: (_id: string) => ({ visible: true, disabled: false, readOnly: false, required: false }),
     control: form.control,
     register: form.register
   };
