@@ -9,6 +9,7 @@ export const sendInvoiceEmail = async (
     invoiceId: string,
     pdfBlob?: Blob
 ): Promise<boolean> => {
+    console.log(`Sending email to ${email} for invoice ${invoiceId}`, pdfBlob);
     return new Promise((resolve) => {
         // Simulate network delay
         setTimeout(() => {

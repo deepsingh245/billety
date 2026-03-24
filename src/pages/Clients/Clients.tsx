@@ -91,106 +91,108 @@ const Clients = () => {
   };
 
   return (
-    <Stack
-      spacing={2}
-      direction={"column"}
-      marginY={2}
-      display={"flex"}
-      justifyContent={"space-between"}
-      alignItems={"center"}
-    >
-      <Stack direction={"row"} justifyContent={"space-between"} alignItems={"center"} width={'100%'}>
-        <Typography component="h2" variant="h6" sx={{ mb: 2 }}>
-          Details
-        </Typography>
-        <Stack direction={"row"} spacing={2}>
-          <Button
-            variant="outlined"
-            onClick={() => setUploadModalOpen(true)}
-            sx={{ width: "fit-content" }}
-          >
-            Bulk Upload
-          </Button>
-          <Button
-            variant="outlined"
-            onClick={handleClickOpen}
-            sx={{ width: "fit-content" }}
-          >
-            Add Client
-          </Button>
-          {selectedClients.length > 0 && (
+    <Stack width={"100%"}>
+      <Stack
+        spacing={2}
+        direction={"column"}
+        marginY={2}
+        display={"flex"}
+        justifyContent={"space-between"}
+        alignItems={"center"}
+      >
+        <Stack direction={"row"} justifyContent={"space-between"} alignItems={"center"} width={'100%'}>
+          <Typography component="h2" variant="h6" sx={{ mb: 2 }}>
+            Details
+          </Typography>
+          <Stack direction={"row"} spacing={2}>
             <Button
               variant="outlined"
-              sx={{ width: "fit-content", minWidth: "auto", padding: '5px' }}
-              onClick={() => setConfirmOpen(true)}
+              onClick={() => setUploadModalOpen(true)}
+              sx={{ width: "fit-content" }}
             >
-              <DeleteIcon sx={{ color: "red" }} />
+              Bulk Upload
             </Button>
-          )}
-        </Stack>
-      </Stack>
-      <ConfirmationDialog
-        open={confirmOpen}
-        title="Delete Clients"
-        content={`Are you sure you want to delete ${selectedClients.length} client(s)? This action cannot be undone.`}
-        onConfirm={handleDelete}
-        onClose={() => setConfirmOpen(false)}
-        confirmText="Delete"
-      />
-      <BulkUploadModal
-        open={uploadModalOpen}
-        onClose={() => setUploadModalOpen(false)}
-        type="client"
-      />
-      <Dialog
-        open={open}
-        onClose={handleClose}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
-        PaperProps={{
-          sx: {
-            backgroundColor: 'background.paper',
-            backgroundImage: 'none',
-          }
-        }}
-      >
-        <DialogTitle
-          id="alert-dialog-title"
-          sx={{ color: 'text.primary' }}
-        >
-          {"Add Client"}
-        </DialogTitle>
-        <DialogContent sx={{ color: 'text.secondary' }}>
-          <Box sx={{ width: "100%" }}>
-            <AddClientForm
-              onSuccess={() => {
-                handleClose();
-                refreshData();
-              }}
-              onCancel={() => handleClose()}
-            />
-          </Box>
-        </DialogContent>
-      </Dialog>
-      <Grid container spacing={2} columns={12}>
-        <Grid size={{ xs: 12, lg: 12 }}>
-          <CustomizedDataGrid
-            columns={columns}
-            rows={clients}
-            checkboxSelection
-            sx={{ width: '100%'}}
-            onRowSelectionModelChange={({ ids }: any) => {
-              const clientIds = Array.from(ids);
-              setSelectedClients(clientIds);
-            }}
-          />
-        </Grid>
-        <Grid size={{ xs: 12, lg: 3 }}>
-          <Stack gap={2} direction={{ xs: "column", sm: "row", lg: "column" }}>
-            {/* <CustomizedTreeView /> */}
+            <Button
+              variant="outlined"
+              onClick={handleClickOpen}
+              sx={{ width: "fit-content" }}
+            >
+              Add Client
+            </Button>
+            {selectedClients.length > 0 && (
+              <Button
+                variant="outlined"
+                sx={{ width: "fit-content", minWidth: "auto", padding: '5px' }}
+                onClick={() => setConfirmOpen(true)}
+              >
+                <DeleteIcon sx={{ color: "red" }} />
+              </Button>
+            )}
           </Stack>
+        </Stack>
+        <ConfirmationDialog
+          open={confirmOpen}
+          title="Delete Clients"
+          content={`Are you sure you want to delete ${selectedClients.length} client(s)? This action cannot be undone.`}
+          onConfirm={handleDelete}
+          onClose={() => setConfirmOpen(false)}
+          confirmText="Delete"
+        />
+        <BulkUploadModal
+          open={uploadModalOpen}
+          onClose={() => setUploadModalOpen(false)}
+          type="client"
+        />
+        <Dialog
+          open={open}
+          onClose={handleClose}
+          aria-labelledby="alert-dialog-title"
+          aria-describedby="alert-dialog-description"
+          PaperProps={{
+            sx: {
+              backgroundColor: 'background.paper',
+              backgroundImage: 'none',
+            }
+          }}
+        >
+          <DialogTitle
+            id="alert-dialog-title"
+            sx={{ color: 'text.primary' }}
+          >
+            {"Add Client"}
+          </DialogTitle>
+          <DialogContent sx={{ color: 'text.secondary' }}>
+            <Box sx={{ width: "100%" }}>
+              <AddClientForm
+                onSuccess={() => {
+                  handleClose();
+                  refreshData();
+                }}
+                onCancel={() => handleClose()}
+              />
+            </Box>
+          </DialogContent>
+        </Dialog>
+        <Grid container spacing={2} columns={12}>
+          <Grid size={{ xs: 12, lg: 12 }}>
+            <CustomizedDataGrid
+              columns={columns}
+              rows={clients}
+              checkboxSelection
+              sx={{ width: '100%' }}
+              onRowSelectionModelChange={({ ids }: any) => {
+                const clientIds = Array.from(ids);
+                setSelectedClients(clientIds);
+              }}
+            />
+          </Grid>
+          <Grid size={{ xs: 12, lg: 3 }}>
+            <Stack gap={2} direction={{ xs: "column", sm: "row", lg: "column" }}>
+              {/* <CustomizedTreeView /> */}
+            </Stack>
+          </Grid>
         </Grid>
-      </Grid>
+      </Stack>
     </Stack>
   );
 };

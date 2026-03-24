@@ -7,7 +7,7 @@ import {
     Stack,
     Typography,
     Box,
-    Paper,
+    // Paper,
     Avatar,
     Stepper,
     Step,
@@ -24,7 +24,7 @@ import { useData } from '../../context/dataContext';
 import { useAuth } from '../../context/AuthContext';
 import { GlobalUIService } from '../../utils/GlobalUIService';
 import { updateDocument } from '../../firebase/firebaseUtils';
-import { APP_CONSTANTS } from '../../constants/app.constants';
+// import { APP_CONSTANTS } from '../../constants/app.constants';
 
 const steps = ['Creator Profile', 'First Workspace'];
 

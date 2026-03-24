@@ -23,7 +23,7 @@ import {
   CardContent,
   useMediaQuery,
 } from "@mui/material";
-import { useTheme, alpha } from "@mui/material/styles";
+import { useTheme } from "@mui/material/styles";
 import { useState, useEffect } from "react";
 import { getAllDocuments, createDocument } from "../../firebase/firebaseUtils";
 import { APP_CONSTANTS } from "../../constants/app.constants";

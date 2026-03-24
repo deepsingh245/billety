@@ -14,6 +14,7 @@ export default function Toast() {
     event?: React.SyntheticEvent | Event,
     reason?: SnackbarCloseReason
   ) => {
+    console.log("🚀 ~ handleClose ~ event:", event)
     if (reason === "clickaway") {
       return;
     }

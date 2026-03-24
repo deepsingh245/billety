@@ -43,6 +43,7 @@ export default function CustomTable({
   const [selectedRows, setSelectedRows] = React.useState<any[]>([]);
 
   const handleChangePage = (event: unknown, newPage: number) => {
+    console.log("🚀 ~ handleChangePage ~ event:", event)
     setPage(newPage);
   };
 
@@ -68,6 +69,7 @@ export default function CustomTable({
   };
 
   const handleRowClick = (event: React.MouseEvent<unknown>, row: any) => {
+    event.stopPropagation();
     if (!checkboxSelection) return;
 
     const selectedIndex = selectedRows.findIndex(
