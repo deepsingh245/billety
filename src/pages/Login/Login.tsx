@@ -13,7 +13,7 @@ import Stack from "@mui/material/Stack";
 import MuiCard from "@mui/material/Card";
 import { styled } from "@mui/material/styles";
 import ForgotPassword from "../ForgotPassword/forgotPassword";
-import { FacebookIcon, GoogleIcon } from "../../shared/customIcons";
+import { GoogleIcon } from "../../shared/customIcons";
 import AppTheme from "../../shared/AppTheme";
 import ColorModeSelect from "../../shared/ColorModeSelect";
 import { useNavigate } from "react-router-dom";
@@ -25,7 +25,6 @@ import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import { ROUTES } from "../../constants/routes.constants";
 import { handleError } from "../../utils/error.utils";
-import { GlobalUIProvider } from "../../context/globalUIContext";
 import { GlobalUIService } from "../../utils/GlobalUIService";
 
 const Card = styled(MuiCard)(({ theme }) => ({
@@ -110,14 +109,13 @@ export default function Login(props: { disableCustomTheme?: boolean }) {
       GlobalUIService.setLoading(true);
       const user = await loginUser(email, password);
       if (user) {
-        console.log("🚀 ~ handleSubmit ~ user:", user);
         navigate(`${ROUTES.DASHBOARD.ROOT}/${ROUTES.DASHBOARD.HOME}`);
+        // Loader stays visible until page navigation completes
       }
     } catch (error) {
-      handleError(error, "Login failed");
-    } finally {
       GlobalUIService.setLoading(false);
-    }
+      handleError(error, "Login failed");
+    } 
   };
 
   const validateInputs = () => {
@@ -149,11 +147,14 @@ export default function Login(props: { disableCustomTheme?: boolean }) {
 
   const loginAsGuest = async () => {
     try {
-      const user = await loginUser("guest@billety.com", "guest@123");
+      GlobalUIService.setLoading(true);
+      const user = await loginUser("guest@billety.com", "pass@123");
       if (user) {
         navigate(`${ROUTES.DASHBOARD.ROOT}/${ROUTES.DASHBOARD.HOME}`);
+        // Loader stays visible until page navigation completes
       }
     } catch (error) {
+      GlobalUIService.setLoading(false);
       handleError(error, "Guest login failed");
     }
   };

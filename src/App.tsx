@@ -6,7 +6,7 @@ import { GlobalUIProvider } from "./context/globalUIContext";
 import { DataProvider } from "./context/dataContext";
 import { AuthProvider } from "./context/AuthContext";
 import { ErrorBoundary } from "./components/ErrorBoundary/ErrorBoundary";
-
+import ThemeWrapper from "./components/ThemeWrapper/ThemeWrapper";
 function RoutesWrapper() {
   const element = useRoutes(routes);
   return <Suspense fallback={<div>Loading...</div>}>{element}</Suspense>;
@@ -19,7 +19,9 @@ function App() {
         <ErrorBoundary>
           <AuthProvider>
             <DataProvider>
-              <RoutesWrapper />
+              <ThemeWrapper>
+                <RoutesWrapper />
+              </ThemeWrapper>
             </DataProvider>
           </AuthProvider>
         </ErrorBoundary>

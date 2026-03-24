@@ -16,5 +16,5 @@ export const handleError = (error: any, customMessage?: string) => {
     console.error(error);
     const message =
         customMessage || error?.message || "An unexpected error occurred.";
-    GlobalUIService.showToast(message);
+    GlobalUIService.showError(message);
 };

@@ -27,7 +27,11 @@ type GlobalUIContextType = {
     content: ReactNode,
     onConfirm?: () => void
   ) => void;
-  showToast: (message: string) => void;
+  showToast: (
+    message: string,
+    severity?: "success" | "error" | "warning" | "info",
+    position?: { vertical: "top" | "bottom"; horizontal: "left" | "center" | "right" }
+  ) => void;
   setLoading: (loading: boolean) => void;
 };
 
@@ -100,9 +104,17 @@ export const GlobalUIProvider = ({ children }: { children: ReactNode }) => {
   // TOAST
   const [toastMessage, setToastMessage] = useState("");
   const [toastOpen, setToastOpen] = useState(false);
+  const [toastSeverity, setToastSeverity] = useState<"success" | "error" | "warning" | "info">("success");
+  const [toastPosition, setToastPosition] = useState<{ vertical: "top" | "bottom"; horizontal: "left" | "center" | "right" }>({ vertical: "top", horizontal: "right" });
 
-  const showToast = (message: string) => {
+  const showToast = (
+    message: string,
+    severity: "success" | "error" | "warning" | "info" = "success",
+    position: { vertical: "top" | "bottom"; horizontal: "left" | "center" | "right" } = { vertical: "top", horizontal: "right" }
+  ) => {
     setToastMessage(message);
+    setToastSeverity(severity);
+    setToastPosition(position);
     setToastOpen(true);
   };
 
@@ -194,11 +206,11 @@ export const GlobalUIProvider = ({ children }: { children: ReactNode }) => {
         open={toastOpen}
         autoHideDuration={3000}
         onClose={() => setToastOpen(false)}
-        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+        anchorOrigin={toastPosition}
       >
         <Alert
           onClose={() => setToastOpen(false)}
-          severity="success"
+          severity={toastSeverity}
           variant="filled"
           sx={{ width: "100%" }}
         >

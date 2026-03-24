@@ -5,14 +5,14 @@ import Menu from '@mui/material/Menu';
 import MuiMenuItem from '@mui/material/MenuItem';
 import { paperClasses } from '@mui/material/Paper';
 import { listClasses } from '@mui/material/List';
-import ListItemText from '@mui/material/ListItemText';
-import ListItemIcon, { listItemIconClasses } from '@mui/material/ListItemIcon';
-import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
+// import ListItemText from '@mui/material/ListItemText';
+// import ListItemIcon, { listItemIconClasses } from '@mui/material/ListItemIcon';
+// import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded';
 import MoreVertRoundedIcon from '@mui/icons-material/MoreVertRounded';
 import MenuButton from '../MenuButton/MenuButton';
 import { useNavigate } from 'react-router-dom';
 import React from 'react';
-import { logoutUser } from '../../firebase/auth';
+// import { logoutUser } from '../../firebase/auth';
 import { ROUTES } from '../../constants/routes.constants';
 
 const MenuItem = styled(MuiMenuItem)({
@@ -29,14 +29,14 @@ export default function OptionsMenu() {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  const handleLogOut = async () => {
-    try {
-      await logoutUser();
-      navigate('/login');
-    } catch (error) {
-      console.error('Logout failed:', error);
-    }
-  };
+  // const handleLogOut = async () => {
+  //   try {
+  //     await logoutUser();
+  //     navigate('/login');
+  //   } catch (error) {
+  //     console.error('Logout failed:', error);
+  //   }
+  // };
 
   return (
     <React.Fragment>

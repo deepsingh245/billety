@@ -12,9 +12,12 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { deleteDocument, deleteDocumentsBatch } from "../../firebase/firebaseUtils";
 import ConfirmationDialog from "../../components/ConfirmationDialog/ConfirmationDialog";
 import SendIcon from '@mui/icons-material/Send';
+import { useAuth } from "../../context/AuthContext";
+import { getUserCollectionPath } from "../../utils/firestorePath.utils";
 
 const Invoices = () => {
   const { filteredInvoices: invoices, loading } = useData();
+  const { user } = useAuth();
   const [open, setOpen] = useState(false);
   const [selectedInvoices, setSelectedInvoices] = useState<string[]>([]);
 
@@ -117,10 +120,11 @@ const Invoices = () => {
     setConfirmOpen(false);
     GlobalUIService.setLoading(true);
     try {
+      if (!user) return;
       if (selectedInvoices.length === 1) {
-        await deleteDocument(APP_CONSTANTS.COLLECTIONS.INVOICES, selectedInvoices[0]);
+        await deleteDocument(getUserCollectionPath(user.uid, APP_CONSTANTS.COLLECTIONS.INVOICES), selectedInvoices[0]);
       } else if (selectedInvoices.length > 1) {
-        await deleteDocumentsBatch(APP_CONSTANTS.COLLECTIONS.INVOICES, selectedInvoices);
+        await deleteDocumentsBatch(getUserCollectionPath(user.uid, APP_CONSTANTS.COLLECTIONS.INVOICES), selectedInvoices);
       }
     } catch (error) {
       console.error("Error deleting invoices:", error);
@@ -187,7 +191,6 @@ const Invoices = () => {
           }))}
             disableRowSelectionOnClick
             onRowSelectionModelChange={(ids: any) => {
-              console.log("🚀 ~ Invoices ~ ids:", ids)
               const selectedRows = Array.from<string>(ids.ids);
               setSelectedInvoices(selectedRows);
             }}

@@ -20,7 +20,7 @@ export class ErrorBoundary extends Component<Props, State> {
 
     public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
         console.error("Uncaught error:", error, errorInfo);
-        GlobalUIService.showToast("An unexpected error occurred. Please refresh.");
+        GlobalUIService.showError("An unexpected error occurred. Please refresh.");
     }
 
     public render() {

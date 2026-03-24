@@ -13,6 +13,8 @@ import { Item } from "../../interfaces/item.interface";
 import { createDocument } from "../../firebase/firebaseUtils";
 import { GlobalUIService } from "../../utils/GlobalUIService";
 import { APP_CONSTANTS } from "../../constants/app.constants";
+import { useAuth } from "../../context/AuthContext";
+import { getUserCollectionPath } from "../../utils/firestorePath.utils";
 
 interface AddItemFormProps {
   onSuccess?: () => void;
@@ -20,6 +22,7 @@ interface AddItemFormProps {
 }
 
 export default function AddItemForm({ onSuccess, onClose }: AddItemFormProps) {
+  const { user } = useAuth();
   const {
     register,
     handleSubmit,
@@ -33,7 +36,8 @@ export default function AddItemForm({ onSuccess, onClose }: AddItemFormProps) {
   const onSubmit = async (data: Item) => {
     GlobalUIService.setLoading(true);
     try {
-      await createDocument(APP_CONSTANTS.COLLECTIONS.ITEMS, data);
+      if (!user) return;
+      await createDocument(getUserCollectionPath(user.uid, APP_CONSTANTS.COLLECTIONS.ITEMS), data);
       GlobalUIService.setLoading(false);
       if (onSuccess) onSuccess();
     } catch (error) {

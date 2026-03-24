@@ -13,7 +13,7 @@ import { useData } from '../../context/dataContext';
 
 dayjs.extend(isBetween);
 
-function CustomPickersDay(props: PickersDayProps<Dayjs>) {
+function CustomPickersDay(props: PickersDayProps) {
   const { dateRange } = useData();
   const theme = useTheme();
   const { day, outsideCurrentMonth, ...other } = props;

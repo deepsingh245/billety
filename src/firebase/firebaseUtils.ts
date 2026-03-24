@@ -15,6 +15,7 @@ import {
   DocumentReference,
   UpdateData,
   writeBatch,
+  serverTimestamp,
 } from "firebase/firestore";
 import { db } from "./firebase.config";
 
@@ -165,5 +166,61 @@ export async function deleteDocumentsBatch(
   } catch (error) {
     console.error("Error deleting documents batch:", error);
     throw error;
+  }
+}
+
+/**
+ * Efficiently creates multiple documents in batches of 500.
+ */
+export async function createDocumentsBatch(
+  collectionPath: string,
+  data: any[]
+): Promise<void> {
+  const BATCH_SIZE = 500;
+  try {
+    for (let i = 0; i < data.length; i += BATCH_SIZE) {
+      const batch = writeBatch(db);
+      const chunk = data.slice(i, i + BATCH_SIZE);
+
+      chunk.forEach((item) => {
+        const ref = doc(collection(db, collectionPath));
+        batch.set(ref, item);
+      });
+
+      await batch.commit();
+    }
+  } catch (error) {
+    console.error("Error creating documents batch:", error);
+    throw error;
+  }
+}
+
+/**
+ * Initializes the user data in Firestore if it doesn't exist.
+ * This is safe to run multiple times (idempotent).
+ */
+export async function initializeUserData(user: any): Promise<void> {
+  if (!user || !user.uid) return;
+
+  const userRef = doc(db, "users", user.uid);
+
+  try {
+    const userSnap = await getDoc(userRef);
+
+    if (!userSnap.exists()) {
+      await setDoc(userRef, {
+        email: user.email,
+        name: user.displayName || "",
+        photoURL: user.photoURL || "",
+        createdAt: serverTimestamp(),
+        defaultTemplateId: null, // Default to null, let app logic handle fallback
+      });
+    } else {
+      // User exists, do nothing
+    }
+  } catch (error) {
+    console.error("Error initializing user data:", error);
+    // We don't throw here to avoid blocking the login flow, 
+    // but in a real app you might want to show a specific error.
   }
 }

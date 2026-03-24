@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from "react";
-import { getAllDocuments } from "../firebase/firebaseUtils";
+import { getAllDocuments, createDocument } from "../firebase/firebaseUtils";
 import { APP_CONSTANTS } from "../constants/app.constants";
 import { handleError } from "../utils/error.utils";
 import { Client } from "../interfaces/client.interface";
@@ -7,13 +7,8 @@ import { Invoice } from "../interfaces/invoice.interface";
 import { Item } from "../interfaces/item.interface";
 import { Project } from "../interfaces/project.interface";
 import i18n from '../i18n';
-
-const DUMMY_PROJECTS: Project[] = [
-    { id: '1', name: 'Billety-web', category: 'Production', plan: 'Pro' },
-    { id: '2', name: 'Billety-app', category: 'Production', plan: 'Free' },
-    { id: '3', name: 'Billety-admin', category: 'Development', plan: 'Enterprise' },
-    { id: '4', name: 'Billety-store', category: 'Production', plan: 'Pro' },
-];
+import { useAuth } from './AuthContext';
+import { getUserCollectionPath } from '../utils/firestorePath.utils';
 
 export interface Settings {
     currency: string;
@@ -40,7 +35,7 @@ interface DataContextType {
     filteredInvoices: Invoice[];
     settings: Settings;
     updateSettings: (newSettings: Partial<Settings>) => void;
-    addProject: (project: Project) => void;
+    addProject: (project: Omit<Project, 'id'>) => Promise<void>;
 }
 
 const DataContext = createContext<DataContextType | undefined>(undefined);
@@ -51,8 +46,8 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const [items, setItems] = useState<Item[]>([]);
 
     // Project State
-    const [projects, setProjects] = useState<Project[]>(DUMMY_PROJECTS);
-    const [currentProject, setCurrentProject] = useState<Project | null>(DUMMY_PROJECTS[0]);
+    const [projects, setProjects] = useState<Project[]>([]);
+    const [currentProject, setCurrentProject] = useState<Project | null>(null);
 
     // Theme State
     const [siteThemes, setSiteThemes] = useState<Record<string, string>>(() => {
@@ -75,8 +70,9 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         endDate: null
     });
 
-    // Date Range State
     const [loading, setLoading] = useState<boolean>(true);
+
+    const { user } = useAuth();
 
     // Settings State
     const [settings, setSettings] = useState<Settings>({
@@ -89,23 +85,34 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     });
 
     const fetchData = useCallback(async () => {
+        if (!user || !user.uid) {
+            setLoading(false);
+            return;
+        }
+
         setLoading(true);
         try {
-            const [clientsData, invoicesData, itemsData] = await Promise.all([
-                getAllDocuments<Client>(APP_CONSTANTS.COLLECTIONS.CLIENTS),
-                getAllDocuments<Invoice>(APP_CONSTANTS.COLLECTIONS.INVOICES),
-                getAllDocuments<Item>(APP_CONSTANTS.COLLECTIONS.ITEMS),
+            const [clientsData, invoicesData, itemsData, projectsData] = await Promise.all([
+                getAllDocuments<Client>(getUserCollectionPath(user.uid, APP_CONSTANTS.COLLECTIONS.CLIENTS)),
+                getAllDocuments<Invoice>(getUserCollectionPath(user.uid, APP_CONSTANTS.COLLECTIONS.INVOICES)),
+                getAllDocuments<Item>(getUserCollectionPath(user.uid, APP_CONSTANTS.COLLECTIONS.ITEMS)),
+                getAllDocuments<Project>(getUserCollectionPath(user.uid, APP_CONSTANTS.COLLECTIONS.SITES)),
             ]);
 
             setClients(clientsData);
             setInvoices(invoicesData);
             setItems(itemsData);
+            setProjects(projectsData);
+
+            if (projectsData.length > 0 && !currentProject) {
+                setCurrentProject(projectsData[0]);
+            }
         } catch (error) {
             handleError(error, "Error fetching data");
         } finally {
             setLoading(false);
         }
-    }, []);
+    }, [user, currentProject]); // Added currentProject to deps to avoid resetting if already set, but logic inside handles it
 
     useEffect(() => {
         fetchData();
@@ -146,8 +153,26 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         }));
     };
 
-    const addProject = (project: Project) => {
-        setProjects(prev => [...prev, project]);
+    const addProject = async (projectData: Omit<Project, 'id'>) => {
+        if (!user) return;
+        try {
+            setLoading(true);
+            const path = getUserCollectionPath(user.uid, APP_CONSTANTS.COLLECTIONS.SITES);
+            const newDocId = await createDocument(path, projectData);
+
+            if (newDocId) {
+                const newProject = { ...projectData, id: newDocId };
+                setProjects(prev => [...prev, newProject]);
+                if (!currentProject) {
+                    setCurrentProject(newProject);
+                }
+            }
+        } catch (error) {
+            handleError(error, "Error creating project");
+            throw error;
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (

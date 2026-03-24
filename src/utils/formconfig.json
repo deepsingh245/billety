@@ -1,0 +1,190 @@
+{
+    "FormConfig": {
+      "id": "string",
+      "version": "string",
+      "meta": {
+        "title": "string",
+        "subtitle": "string?",
+        "icon": "string?",
+        "badge": "string?",
+        "headerRender": "CustomRenderer?",
+        "footerRender": "CustomRenderer?"
+      },
+      "layout": {
+        "type": "flat | grid | steps | tabs | accordion",
+        "columns": "number (1-12)?",
+        "gap": "string | number?",
+        "fieldWidth": "full | half | auto?",
+        "sectionGap": "string | number?",
+        "padding": "string | number?",
+        "maxWidth": "string | number?",
+        "align": "left | center | right?",
+        "responsive": "ResponsiveConfig?"
+      },
+      "fields": [
+        {
+          "id": "string",
+          "type": "FieldType",
+          "label": "string | ReactNode",
+          "labelPosition": "top | left | right | floating | none?",
+          "placeholder": "string?",
+          "hint": "string?",
+          "tooltip": "string | TooltipConfig?",
+          "prefix": "string | ReactNode?",
+          "suffix": "string | ReactNode?",
+          "required": "boolean?",
+          "disabled": "boolean | function?",
+          "readOnly": "boolean | function?",
+          "hidden": "boolean | function?",
+          "visible": "boolean | function?",
+          "defaultValue": "any?",
+          "value": "any | function?",
+          "width": "full | half | third | auto | number%?",
+          "colSpan": "number (1-12)?",
+          "order": "number?",
+          "group": "string?",
+          "step": "string?",
+          "validation": {
+            "required": "boolean?",
+            "min": "number?",
+            "max": "number?",
+            "pattern": "string?",
+            "matches": "string?",
+            "oneOf": "array?",
+            "custom": "function?",
+            "remote": {
+              "url": "string",
+              "method": "GET | POST?",
+              "debounce": "number?"
+            },
+            "messages": "Record<string,string>?",
+            "showOn": "blur | change | submit?"
+          },
+          "onChange": "function?",
+          "onBlur": "function?",
+          "onFocus": "function?",
+          "transform": "function?",
+          "display": "function?",
+          "render": "CustomRenderer?",
+          "wrapperRender": "CustomRenderer?",
+          "errorRender": "CustomRenderer?",
+          "labelRender": "CustomRenderer?",
+          "props": "Record<string, any>?",
+          "className": "string?",
+          "style": "CSSProperties?",
+          "dataAttributes": "Record<string,string>?",
+          "aria": "AriaConfig?",
+          "testId": "string?",
+          "copyable": "boolean?",
+          "clearable": "boolean?",
+          "loading": "boolean | function?",
+          "conditions": [
+            {
+              "when": {
+                "field": "string?",
+                "is": "any?",
+                "not": "any?",
+                "gt": "number?",
+                "gte": "number?",
+                "lt": "number?",
+                "lte": "number?",
+                "in": "array?",
+                "notIn": "array?",
+                "matches": "string?",
+                "isEmpty": "boolean?",
+                "isNotEmpty": "boolean?"
+              },
+              "show": "string[]?",
+              "hide": "string[]?",
+              "enable": "string[]?",
+              "disable": "string[]?",
+              "require": "string[]?",
+              "set": "Record<string,Partial<FieldConfig>>?",
+              "setValue": "Record<string,any>?",
+              "clearValue": "string[]?"
+            }
+          ],
+          "dependencies": "string[]?",
+          "meta": "Record<string,any>?"
+        }
+      ],
+      "groups": [
+        {
+          "id": "string",
+          "title": "string?",
+          "subtitle": "string?",
+          "icon": "string?",
+          "collapsible": "boolean?",
+          "defaultCollapsed": "boolean?",
+          "columns": "number?",
+          "visible": "boolean | function?",
+          "render": "CustomRenderer?",
+          "headerRender": "CustomRenderer?",
+          "className": "string?",
+          "style": "CSSProperties?"
+        }
+      ],
+      "steps": [
+        {
+          "id": "string",
+          "title": "string",
+          "subtitle": "string?",
+          "icon": "string?",
+          "fields": "string[]?",
+          "groups": "string[]?"
+        }
+      ],
+      "validation": {
+        "mode": "onBlur | onChange | onSubmit | all",
+        "schema": "Zod | Yup | CustomFn?"
+      },
+      "submit": {
+        "label": "string",
+        "loadingLabel": "string?",
+        "successLabel": "string?",
+        "position": "left | right | center | full?",
+        "render": "CustomRenderer?",
+        "onSubmit": "function",
+        "transform": "function?"
+      },
+      "theme": "ThemeConfig?",
+      "hooks": "FormHooks?",
+      "i18n": "I18nConfig?",
+      "defaultValues": "Record<string,any>?",
+      "resetOnSubmit": "boolean",
+      "persistKey": "string?"
+    },
+    "FieldType": [
+      "text",
+      "textarea",
+      "number",
+      "slider",
+      "select",
+      "multiselect",
+      "combobox",
+      "radio",
+      "checkbox",
+      "toggle",
+      "date",
+      "time",
+      "datetime",
+      "daterange",
+      "file",
+      "image",
+      "password",
+      "email",
+      "phone",
+      "url",
+      "color",
+      "rating",
+      "tags",
+      "otp",
+      "richtext",
+      "code",
+      "json",
+      "hidden",
+      "display",
+      "divider",
+      "custom"
+    ]
+  }

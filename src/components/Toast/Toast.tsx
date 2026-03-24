@@ -14,10 +14,10 @@ export default function Toast() {
     event?: React.SyntheticEvent | Event,
     reason?: SnackbarCloseReason
   ) => {
+    event?.preventDefault();
     if (reason === "clickaway") {
       return;
     }
-    console.log(event);
     setOpen(false);
   };
 

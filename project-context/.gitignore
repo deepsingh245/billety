@@ -1,0 +1,4 @@
+# Generated context files - don't commit to git
+*.json
+*.md
+*.txt

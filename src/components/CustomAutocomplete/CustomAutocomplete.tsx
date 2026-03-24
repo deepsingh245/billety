@@ -1,4 +1,4 @@
-import { Autocomplete, Box, TextField, Typography } from "@mui/material";
+import { Autocomplete, Box, TextField } from "@mui/material";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import CloseIcon from "@mui/icons-material/Close";
 
@@ -10,6 +10,7 @@ interface CustomAutocompleteProps<T> {
     renderOptionContent: (option: T) => React.ReactNode;
     label?: string;
     placeholder?: string;
+    disabled?: boolean;
     sx?: any;
 }
 

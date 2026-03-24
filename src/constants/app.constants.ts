@@ -4,6 +4,7 @@ export const APP_CONSTANTS = {
         CLIENTS: "clients",
         INVOICES: "invoices",
         ITEMS: "items",
+        SITES: 'sites'
     },
     MESSAGES: {
         GENERIC_ERROR: "Something went wrong. Please try again.",
@@ -11,6 +12,7 @@ export const APP_CONSTANTS = {
         DELETE_SUCCESS: "Deleted successfully!",
         DELETE_CONFIRM: "Are you sure you want to delete this?",
     },
+
 };
 
 export const ChipVariant = {
