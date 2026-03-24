@@ -110,11 +110,11 @@ export default function Login(props: { disableCustomTheme?: boolean }) {
       const user = await loginUser(email, password);
       if (user) {
         navigate(`${ROUTES.DASHBOARD.ROOT}/${ROUTES.DASHBOARD.HOME}`);
+        // Loader stays visible until page navigation completes
       }
     } catch (error) {
-      handleError(error, "Login failed");
-    } finally {
       GlobalUIService.setLoading(false);
+      handleError(error, "Login failed");
     } 
   };
 
@@ -151,11 +151,11 @@ export default function Login(props: { disableCustomTheme?: boolean }) {
       const user = await loginUser("guest@billety.com", "pass@123");
       if (user) {
         navigate(`${ROUTES.DASHBOARD.ROOT}/${ROUTES.DASHBOARD.HOME}`);
+        // Loader stays visible until page navigation completes
       }
     } catch (error) {
-      handleError(error, "Guest login failed");
-    }finally {
       GlobalUIService.setLoading(false);
+      handleError(error, "Guest login failed");
     }
   };
 

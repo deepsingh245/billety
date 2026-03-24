@@ -1,4 +1,5 @@
 
+import type { } from '@mui/material/styles';
 import type { } from '@mui/x-date-pickers/themeAugmentation';
 import type { } from '@mui/x-charts/themeAugmentation';
 import type { } from '@mui/x-data-grid-pro/themeAugmentation';
@@ -14,6 +15,8 @@ import Header from '../../components/Header/Header';
 import Stack from '@mui/material/Stack';
 import AppNavbar from '../../components/AppNavbar/AppNavbar';
 import { alpha } from '@mui/material/styles';
+import { useEffect } from 'react';
+import { GlobalUIService } from '../../utils/GlobalUIService';
 
 const xThemeComponents = {
   ...chartsCustomizations,
@@ -26,6 +29,12 @@ import { useData } from '../../context/dataContext';
 
 export default function Dashboard(props: { disableCustomTheme?: boolean }) {
   const { currentTheme } = useData();
+
+  useEffect(() => {
+    // Turn off loader when dashboard loads (after navigation from login)
+    GlobalUIService.setLoading(false);
+  }, []);
+
   return (
     <AppTheme {...props} themeComponents={xThemeComponents} themeName={currentTheme}>
       <CssBaseline enableColorScheme />
