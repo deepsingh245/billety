@@ -1,0 +1,50 @@
+Name,Category,RatePerKg,RatePerPiece,Unit,Description
+Cement 50kg Bag,Building Materials,7.50,375,piece,Portland cement 50kg bag
+Steel Bars - 12mm,Steel & Iron,55,0,kg,Mild steel bars 12mm diameter
+Steel Bars - 16mm,Steel & Iron,55,0,kg,Mild steel bars 16mm diameter
+Bricks - Red Clay,Bricks & Blocks,0,5,piece,Standard red clay bricks
+Concrete Blocks 4" x 8" x 8",Bricks & Blocks,0,25,piece,Concrete hollow blocks
+Sand - River,Aggregates,0.80,0,kg,River sand for construction
+Gravel - 20mm,Aggregates,1.20,0,kg,Coarse aggregate 20mm
+Nails - 1 inch,Hardware,0,0.50,piece,Mild steel nails 1 inch
+Nails - 2 inch,Hardware,0,0.75,piece,Mild steel nails 2 inch
+Wood Screws - 2 inch,Hardware,0,1.25,piece,Wood screws 2 inch
+Bolts & Nuts Assorted,Hardware,120,0,kg,Assorted bolts and nuts
+Door Frame - Steel,Doors & Windows,0,1500,piece,Standard steel door frame
+Wooden Door Frame,Doors & Windows,0,2000,piece,Teak wood door frame
+Window Frame - Aluminum,Doors & Windows,0,3000,piece,Aluminum window frame
+Glass Tiles 12" x 12",Tiles & Flooring,0,150,piece,Ceramic tiles
+Marble Flooring 12" x 12",Tiles & Flooring,0,350,piece,Marble tiles premium
+Granite Flooring 12" x 12",Tiles & Flooring,0,400,piece,Granite tiles
+Paint - Emulsion White,Paints & Coatings,0,300,liter,Emulsion paint white 1L
+Paint - Enamel,Paints & Coatings,0,400,liter,Enamel paint glossy 1L
+Waterproofing Compound,Paints & Coatings,500,0,kg,Waterproofing powder
+Plumbing Pipe - PVC 1 inch,Plumbing,0,80,meter,PVC pipe 1 inch
+Plumbing Pipe - GI 1 inch,Plumbing,0,150,meter,Galvanized iron pipe 1 inch
+Pipe Fittings - Elbow,Plumbing,0,25,piece,Pipe elbow 1 inch
+Pipe Fittings - Tee,Plumbing,0,35,piece,Pipe tee 1 inch
+Electrical Wire - 1.5 SQ MM,Electrical,0,15,meter,Electrical cable 1.5 sq mm
+Electrical Wire - 2.5 SQ MM,Electrical,0,25,meter,Electrical cable 2.5 sq mm
+Electrical Switch - 1 Way,Electrical,0,50,piece,Plastic switch 1 way
+Electrical Socket - 5A,Electrical,0,75,piece,Electrical socket 5A
+Light Bulb - LED 9W,Electrical,0,120,piece,LED bulb 9W
+Roofing Sheet - Metal,Roofing,12,0,kg,Metal roofing sheets
+Wooden Shuttering,Shuttering,0,0,sqft,Plywood for shuttering
+Concrete Ready Mix,Concrete,3.50,0,kg,Ready mix concrete
+Mortar Cement Mix,Concrete,4.50,0,kg,Cement mortar mix
+Putty - Wall,Finishing,0,250,kg,Wall putty 1kg
+Joint Filler,Finishing,0,200,kg,Joint filler 1kg
+Tile Adhesive,Finishing,0,350,kg,Tile adhesive 1kg
+Grout - Epoxy,Finishing,0,400,kg,Epoxy grout 1kg
+Wood Polish,Finishing,0,500,liter,Wood polish 1L
+Ladder - Aluminum 20ft,Equipment,0,5000,piece,Aluminum ladder 20ft
+Scaffolding Pipe,Equipment,0,150,meter,Iron scaffolding pipe
+Cement Bags - 50kg,Building Materials,7.50,375,bag,Cement 50kg bag
+Plaster of Paris,Building Materials,15,0,kg,Plaster of paris
+Lime Mortar,Building Materials,2.50,0,kg,Lime mortar mix
+Damp Proof Course,Building Materials,0,0,sqft,DPC material
+Heat Insulation,Building Materials,0,600,sqft,Thermal insulation
+Sound Proofing Material,Building Materials,0,800,sqft,Acoustic foam
+Corrugated Sheet,Roofing,0,250,piece,Metal corrugated sheet
+Ridge Tile,Roofing,0,50,piece,Roof ridge tile
+Gutter - Steel,Roofing,0,800,piece,Steel rain gutter
