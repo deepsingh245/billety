@@ -11,6 +11,13 @@ node_modules
 dist
 dist-react
 dist-ssr
+release-desktop
+
+# Mobile App builds
+android/app/build/
+ios/App/build/
+ios/App/Pods/
+
 *.local
 .env*
 
