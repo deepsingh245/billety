@@ -5,7 +5,7 @@
 
 import { Invoice } from "../interfaces/invoice.interface";
 import { sendEmailWithAttachmentFromClient, sendEmailFromClient } from "./emailClient.service";
-import { getEmailTemplate, EmailTemplateType } from "./emailTemplates.service";
+import { getEmailTemplate } from "./emailTemplates.service";
 import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
 
