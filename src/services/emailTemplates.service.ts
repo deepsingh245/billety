@@ -3,8 +3,7 @@
  * HTML templates for various email communications
  */
 
-import { Invoice } from "../../interfaces/invoice.interface";
-import { CURRENCY } from "../../constants/app.constants";
+import { Invoice } from "../interfaces/invoice.interface";
 
 /**
  * Generate HTML for invoice email
